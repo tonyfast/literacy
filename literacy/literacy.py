@@ -1,110 +1,121 @@
 
 # coding: utf-8
 
-# In[8]:
+# In[1]:
 
 
+from nbformat import NotebookNode
+from typing import *
+NBRESOURCES, CELLRESOURCES = map(lambda x: TypeVar(x, NotebookNode, Dict), ['NBRESOURCES', 'CELLRESOURCES'])
+CODE_CELL, OUTPUTS, NOTEBOOK = map(TypeVar, ['CODE_CELL', 'OUTPUTS', 'NOTEBOOK'])
+
+
+# In[2]:
+
+
+from nbformat.v4 import new_markdown_cell, new_code_cell, new_notebook, new_output, nbformat_schema
+from mistune import Markdown, Renderer, preprocessing
+from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
+from types import MethodType
 __all__ = 'load_ipython_extension', 'unload_ipython_extension'
 
 
-# ### create a `mistune` renderer that captures code cells.
-
-# In[16]:
+# In[3]:
 
 
-try:
-    from display import style
-except:
-    from .display import style
+def execute(
+    nb: NOTEBOOK, store_history=False, silent=False, shell_futures=True
+) -> ExecutionResult:
+    from time import time
+    ip, t = __import__('IPython').get_ipython(), time()
+    for cell in nb['cells']:
+        if cell['cell_type'] == 'code':
+            t, code = time(), cell['source']
+            InteractiveShell.run_cell(ip, code, store_history, silent, shell_futures)
+            ip.display_pub.publish({'':''}, {'time': time()-t})
+    return ExecutionResult()
 
 
-# In[9]:
+# In[4]:
 
 
-from mistune import Markdown, Renderer
-from nbconvert.filters import ipython2python
+def codespan(text, code: str, lang="""""", markdown="""""", SEP='`'):
+    return (*text.split(SEP, 2), SEP)
+
+def block_code(text, code: str, lang: str, block="""""", markdown="""""", SEP='```'):
+    for line in filter(bool, code.splitlines()):
+        leading, text = text.split(line, 1)
+        if not block:
+            if SEP in leading:
+                markdown, leading = leading.split(SEP+lang, 1)
+            else:
+                (*markdown, leading), SEP = leading.splitlines(), ""
+        block += leading + line
+    return markdown, block, text, SEP
+
+blocks = {'codespan': codespan, 'block_code': block_code}
 
 
-# In[10]:
+# In[5]:
 
 
-class Literate(Renderer):
-    source = [] 
-    def block_code(self, code, language=None):
-        # Strip leading indent
-        lines = code.split('\n')
-        tab = len(lines[0]) - len(lines[0].lstrip())
-        return self.source.append((
-                ipython2python('\n'.join([line[tab:] for line in lines])), True
-        )) or code
-
-    def codespan(self, code):
-        """Do not record codespan histories"""
-        return self.source.append((ipython2python(code), False)) or code
-
-
-# In[11]:
-
-
-class Codify(Markdown):
-    def render(self, text):
-        self.renderer.source = []
-        super().render(text)
-        return self.renderer.source
-renderer = Codify(renderer=Literate())
-
-
-# ### IPython
-# 
-# A replacement `run_cell` function for Ipython
-
-# In[12]:
-
-
-from IPython.display import display, Markdown as MarkDisplay
-from IPython.core.interactiveshell import InteractiveShell
-
-def run_cell(self, raw_cell, store_history=True, silent=True, shell_futures=True):
-    display(MarkDisplay(raw_cell + """\n\n---\n"""))
-    for source, history in renderer.render(raw_cell) or [("""""", False)]:
-        executed = InteractiveShell.run_cell(self, source, history, silent, shell_futures)
-    return executed
-
-
-# ### Magics
-# 
-# Use `%load literate` to activate literate programming; `%unload literate` reverses this behavior.
-
-# In[13]:
-
-
-from types import MethodType
-from IPython import get_ipython
-def load_ipython_extension(ip=get_ipython()):
-    ip.run_cell = MethodType(run_cell, ip)
-    style(__style_block__)
+class Notebook(Markdown):
+    def render(self, body: Union[str, CODE_CELL], metadata={}, outputs=[]) -> NOTEBOOK:
+        if isinstance(body, NotebookNode):
+            outputs, body = body.get('outputs'), body.get('source')
+        body, cells, self.renderer.blocks = preprocessing(body), [], []
+        for code, lang, type in super().render(body) and self.renderer.blocks:
+            markdown, block, body, SEP = blocks[type](body, code, lang)
+            '\n'.join(markdown).strip() and cells.append(new_markdown_cell(markdown, metadata=metadata))
+            if block.strip():
+                cells.append(new_code_cell(block, metadata=metadata))
+                cells[-1]['metadata'].update({'lang': lang, 'sep': SEP})
+            
+        if outputs:
+            cells = zip_outputs(new_notebook(cells=cells), outputs)['cells']
+        return new_notebook(
+            cells=body.strip() and cells.append(new_markdown_cell(body)) or cells
+        )
     
-def unload_ipython_extension(ip=get_ipython()):
+
+class CodeCell(Renderer):
+    def block_code(self, code: str, lang='') -> str:
+        return self.blocks.append((code, lang or '', 'block_code')) or super().block_code(code, lang)
+
+    def codespan(self, code: str, lang='') -> str:
+        return self.blocks.append((code, lang, 'codespan')) or super().codespan(code)
+
+CodeCell.blocks, renderer = [], Notebook(renderer=CodeCell(), parse_block_html=False)
+
+
+# In[6]:
+
+
+def run_cell(self, text: str, store_history=True, silent=True, shell_futures=True) -> ExecutionResult:
+    from IPython.display import display, Markdown
+    return display(Markdown(text)) or execute(
+        renderer.render(text), store_history, silent, shell_futures)
+
+
+# In[7]:
+
+
+def load_ipython_extension(ip=__import__('IPython').get_ipython()):
+    ip.run_cell = MethodType(run_cell, ip)
+
+def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
     ip.run_cell = MethodType(InteractiveShell.run_cell, ip)
 
 
-# In[17]:
+# In[ ]:
 
 
-if __name__ == '__main__': 
-    get_ipython().system('jupyter nbconvert --to script literacy.ipynb')
+if __name__ == '__main__':
+    get_ipython().system('jupyter nbconvert --to python literacy.ipynb')
 
 
-# In[18]:
+# In[ ]:
 
 
-__style_block__ = """
-.output_subarea.output_markdown.rendered_html {
-    flex: .9;
-    padding-left: 0px;
-}
-.output_subarea {
-    flex: .9;
-    padding-left: 10%;
-}"""
+
 
