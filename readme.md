@@ -5,6 +5,8 @@
 
 ---
 
+<code>pip install git+https://github.com/tonyfast/literacy</code>
+
 # __magic__ally load __literacy__
 
 
@@ -13,6 +15,10 @@
 ```
 
 
+        %load_ext literacy
+
+
+
 ```python
 # Literate programming mode
 
@@ -135,66 +141,52 @@ We must be able to reuse notebooks; __literacy__ provides a system for that.
         %load_ext literacy.imports
     
 Now, notebooks and markdown files can be imported.
-
-
-
-```python
-### Importing a __Markdown__ file
-
-All code in the document is evaluated; `%rm testfile.md`.
-
-        %%file testfile.md
-        This is a text and `pi=3.14`.
-        
----
-
-        import testfile
-        print("pi = {} from {}.md".format(testfile.pi, testfile.__name__))
-```
-
-
-### Importing a __Markdown__ file
-
-All code in the document is evaluated; `%rm testfile.md`.
-
-        %%file testfile.md
-        This is a text and `pi=3.14`.
-        
----
-
-        import testfile
-        print("pi = {} from {}.md".format(testfile.pi, testfile.__name__))
-
-
-    Writing testfile.md
-    pi = 3.14 from testfile.md
-
-
-
-```python
-        import readme
-```
-
-
-        import readme
-
-
-    The literacy extension is already loaded. To reload it, use:
-      %reload_ext literacy
-    42
-    This evaluated to: 420
-    Say what ❓👂
-
-
-
-    <IPython.core.display.Javascript object>
 
 
     The literacy.imports extension is already loaded. To reload it, use:
       %reload_ext literacy.imports
+
+
+
+```python
+### Importing a __Markdown__ file
+
+All code in the document is evaluated; `%rm testfile.md`.
+
+        %%file testfile.md
+        This is a text and `pi=3.14`.
+        
+---
+
+        import testfile
+        print("pi = {} from {}.md".format(testfile.pi, testfile.__name__))
+```
+
+
+### Importing a __Markdown__ file
+
+All code in the document is evaluated; `%rm testfile.md`.
+
+        %%file testfile.md
+        This is a text and `pi=3.14`.
+        
+---
+
+        import testfile
+        print("pi = {} from {}.md".format(testfile.pi, testfile.__name__))
+
+
     Writing testfile.md
     pi = 3.14 from testfile.md
-    {{foo}}
+
+
+
+```python
+        import readme
+```
+
+
+        import readme
 
 
 
@@ -493,39 +485,39 @@ This tool was designed to tell stories about real data.  Since every code block 
   </thead>
   <tbody>
     <tr>
-      <th>ARTF4Tj4O9</th>
-      <td>-0.801729</td>
-      <td>-1.050848</td>
-      <td>0.867274</td>
-      <td>-0.920515</td>
+      <th>kPz5KNKIPm</th>
+      <td>-0.333185</td>
+      <td>0.008006</td>
+      <td>0.116703</td>
+      <td>-0.043573</td>
     </tr>
     <tr>
-      <th>sNpruIrwcq</th>
-      <td>-0.520448</td>
-      <td>1.193728</td>
-      <td>-0.617226</td>
-      <td>-0.108394</td>
+      <th>8Yju66u21A</th>
+      <td>1.911384</td>
+      <td>1.846572</td>
+      <td>-0.159875</td>
+      <td>-0.702220</td>
     </tr>
     <tr>
-      <th>1vy8DOBX1Z</th>
-      <td>0.582042</td>
-      <td>-0.771048</td>
-      <td>0.423074</td>
-      <td>-0.752478</td>
+      <th>3Kv009AezS</th>
+      <td>-0.542921</td>
+      <td>0.401224</td>
+      <td>1.442336</td>
+      <td>-0.112092</td>
     </tr>
     <tr>
-      <th>z7ULVVb5ng</th>
-      <td>-0.442876</td>
-      <td>-1.374352</td>
-      <td>0.916052</td>
-      <td>-0.159086</td>
+      <th>XCGSyRGB4W</th>
+      <td>-0.210745</td>
+      <td>-0.145298</td>
+      <td>0.791950</td>
+      <td>0.077314</td>
     </tr>
     <tr>
-      <th>sT5uPh37KD</th>
-      <td>-0.762973</td>
-      <td>-0.918707</td>
-      <td>-1.857408</td>
-      <td>-0.016084</td>
+      <th>8ukSYuhCVV</th>
+      <td>0.305186</td>
+      <td>-1.466496</td>
+      <td>-0.286745</td>
+      <td>-0.300308</td>
     </tr>
   </tbody>
 </table>
@@ -566,52 +558,52 @@ This tool was designed to tell stories about real data.  Since every code block 
     </tr>
     <tr>
       <th>mean</th>
-      <td>-0.015280</td>
-      <td>-0.302348</td>
-      <td>0.309254</td>
-      <td>-0.184054</td>
+      <td>0.050096</td>
+      <td>-0.197880</td>
+      <td>-0.053030</td>
+      <td>-0.320474</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>0.813125</td>
-      <td>0.969099</td>
-      <td>1.024798</td>
-      <td>0.928555</td>
+      <td>0.912821</td>
+      <td>1.048938</td>
+      <td>0.875320</td>
+      <td>1.106429</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>-1.924242</td>
-      <td>-2.243756</td>
-      <td>-1.857408</td>
-      <td>-3.088407</td>
+      <td>-1.527188</td>
+      <td>-2.143377</td>
+      <td>-2.718607</td>
+      <td>-2.609820</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>-0.656812</td>
-      <td>-1.008438</td>
-      <td>-0.334845</td>
-      <td>-0.714192</td>
+      <td>-0.537088</td>
+      <td>-1.194501</td>
+      <td>-0.283396</td>
+      <td>-0.747590</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>0.013931</td>
-      <td>-0.332025</td>
-      <td>0.448040</td>
-      <td>-0.171886</td>
+      <td>-0.004867</td>
+      <td>-0.073056</td>
+      <td>0.035302</td>
+      <td>-0.350338</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>0.372794</td>
-      <td>0.463225</td>
-      <td>0.889485</td>
-      <td>0.172735</td>
+      <td>0.448884</td>
+      <td>0.331297</td>
+      <td>0.516889</td>
+      <td>0.309658</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>1.777828</td>
-      <td>1.585700</td>
-      <td>2.418356</td>
-      <td>1.934951</td>
+      <td>1.911384</td>
+      <td>1.983712</td>
+      <td>1.442336</td>
+      <td>2.808144</td>
     </tr>
   </tbody>
 </table>
@@ -652,7 +644,7 @@ This tool was designed to tell stories about real data.  Since every code block 
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 31674 bytes to readme.md
+    [NbConvertApp] Writing 31880 bytes to readme.md
 
 
 
