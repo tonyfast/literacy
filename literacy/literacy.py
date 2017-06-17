@@ -4,35 +4,40 @@
 # In[1]:
 
 
-from nbformat import NotebookNode
-from typing import *
-NBRESOURCES, CELLRESOURCES = map(lambda x: TypeVar(x, NotebookNode, Dict), ['NBRESOURCES', 'CELLRESOURCES'])
-CODE_CELL, OUTPUTS, NOTEBOOK = map(TypeVar, ['CODE_CELL', 'OUTPUTS', 'NOTEBOOK'])
-
-
-# In[2]:
-
-
 from nbformat.v4 import new_markdown_cell, new_code_cell, new_notebook, new_output, nbformat_schema
+    
+from nbconvert.filters import comment_lines
+from nbformat import NotebookNode
 from mistune import Markdown, Renderer, preprocessing
 from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
 from types import MethodType
 __all__ = 'load_ipython_extension', 'unload_ipython_extension'
 
 
+# In[2]:
+
+
+def dedent(lines):
+    dedent, out = 0, []
+    if isinstance(lines, str):
+        lines = lines.splitlines()
+        
+    if any(map(str.strip, lines)):
+        dedent = next(filter(str.strip, lines))
+        dedent = len(dedent) - len(dedent.lstrip())
+    
+    return '\n'.join(map(lambda x: x[dedent:], lines))
+
+
 # In[3]:
 
 
-def execute(
-    nb: NOTEBOOK, store_history=False, silent=False, shell_futures=True
-) -> ExecutionResult:
-    from time import time
-    ip, t = __import__('IPython').get_ipython(), time()
+def execute(nb, store_history=False, silent=False, shell_futures=True):
+    ip = __import__('IPython').get_ipython()
     for cell in nb['cells']:
         if cell['cell_type'] == 'code':
-            t, code = time(), cell['source']
+            code = cell['source']
             InteractiveShell.run_cell(ip, code, store_history, silent, shell_futures)
-            ip.display_pub.publish({'':''}, {'time': time()-t})
     return ExecutionResult()
 
 
@@ -60,7 +65,7 @@ blocks = {'codespan': codespan, 'block_code': block_code}
 
 
 class Notebook(Markdown):
-    def render(self, body: Union[str, CODE_CELL], metadata={}, outputs=[]) -> NOTEBOOK:
+    def render(self, body, metadata={}, outputs=[]):
         if isinstance(body, NotebookNode):
             outputs, body = body.get('outputs'), body.get('source')
         body, cells, self.renderer.blocks = preprocessing(body), [], []
@@ -70,13 +75,11 @@ class Notebook(Markdown):
             if block.strip():
                 cells.append(new_code_cell(block, metadata=metadata))
                 cells[-1]['metadata'].update({'lang': lang, 'sep': SEP})
-            
-        if outputs:
-            cells = zip_outputs(new_notebook(cells=cells), outputs)['cells']
+            else:
+                cells.append(new_markdown_cell(block))
         return new_notebook(
-            cells=body.strip() and cells.append(new_markdown_cell(body)) or cells
+            cells=body and cells.append(new_markdown_cell(body)) or cells
         )
-    
 
 class CodeCell(Renderer):
     def block_code(self, code: str, lang='') -> str:
@@ -100,11 +103,11 @@ def run_cell(self, text: str, store_history=True, silent=True, shell_futures=Tru
 # In[7]:
 
 
-def load_ipython_extension(ip=__import__('IPython').get_ipython()):
-    ip.run_cell = MethodType(run_cell, ip)
+def load_ipython_extension(ip=__import__('IPython').get_ipython(), runner=run_cell):
+    ip.run_cell = MethodType(runner, ip)
 
 def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
-    ip.run_cell = MethodType(InteractiveShell.run_cell, ip)
+    load_ipython_extension(ip, InteractiveShell.run_cell)
 
 
 # In[ ]:
@@ -112,6 +115,12 @@ def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
 
 if __name__ == '__main__':
     get_ipython().system('jupyter nbconvert --to python literacy.ipynb')
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
