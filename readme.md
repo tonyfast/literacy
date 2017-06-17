@@ -1,7 +1,7 @@
 
-# __literacy__ - literate computing in notebooks
+# __literacy__ - Computable documents in natural language.
 
-> Crafts computable documents in natural language.
+> __literacy__ allows [literate programming](roxygen.org/knuth-literate-programming.pdf)-like concepts to work in the notebook. 
 
 ---
 
@@ -649,6 +649,10 @@ This tool was designed to tell stories about real data.  Since every code block 
 
         if True and __name__ == '__main__':
             !jupyter nbconvert --to markdown readme.ipynb
+
+
+    [NbConvertApp] Converting notebook readme.ipynb to markdown
+    [NbConvertApp] Writing 31674 bytes to readme.md
 
 
 
