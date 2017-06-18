@@ -5,43 +5,25 @@
 
 
 from nbformat.v4 import new_markdown_cell, new_code_cell, new_notebook, new_output, nbformat_schema
-    
-from nbconvert.filters import comment_lines
 from nbformat import NotebookNode
 from mistune import Markdown, Renderer, preprocessing
 from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
 from types import MethodType
-__all__ = 'load_ipython_extension', 'unload_ipython_extension'
+__all__ = []
 
 
-# In[2]:
-
-
-def dedent(lines):
-    dedent, out = 0, []
-    if isinstance(lines, str):
-        lines = lines.splitlines()
-        
-    if any(map(str.strip, lines)):
-        dedent = next(filter(str.strip, lines))
-        dedent = len(dedent) - len(dedent.lstrip())
-    
-    return '\n'.join(map(lambda x: x[dedent:], lines))
-
-
-# In[3]:
+# In[9]:
 
 
 def execute(nb, store_history=False, silent=False, shell_futures=True):
     ip = __import__('IPython').get_ipython()
     for cell in nb['cells']:
         if cell['cell_type'] == 'code':
-            code = cell['source']
-            InteractiveShell.run_cell(ip, code, store_history, silent, shell_futures)
+            InteractiveShell.run_cell(ip, cell['source'], store_history, silent, shell_futures)
     return ExecutionResult()
 
 
-# In[4]:
+# In[10]:
 
 
 def codespan(text, code: str, lang="""""", markdown="""""", SEP='`'):
@@ -61,7 +43,7 @@ def block_code(text, code: str, lang: str, block="""""", markdown="""""", SEP='`
 blocks = {'codespan': codespan, 'block_code': block_code}
 
 
-# In[5]:
+# In[15]:
 
 
 class Notebook(Markdown):
@@ -77,9 +59,7 @@ class Notebook(Markdown):
                 cells[-1]['metadata'].update({'lang': lang, 'sep': SEP})
             else:
                 cells.append(new_markdown_cell(block))
-        return new_notebook(
-            cells=body and cells.append(new_markdown_cell(body)) or cells
-        )
+        return new_notebook(cells=body and cells.append(new_markdown_cell(body)) or cells)
 
 class CodeCell(Renderer):
     def block_code(self, code: str, lang='') -> str:
@@ -91,7 +71,7 @@ class CodeCell(Renderer):
 CodeCell.blocks, renderer = [], Notebook(renderer=CodeCell(), parse_block_html=False)
 
 
-# In[6]:
+# In[16]:
 
 
 def run_cell(self, text: str, store_history=True, silent=True, shell_futures=True) -> ExecutionResult:
@@ -100,7 +80,7 @@ def run_cell(self, text: str, store_history=True, silent=True, shell_futures=Tru
         renderer.render(text), store_history, silent, shell_futures)
 
 
-# In[7]:
+# In[17]:
 
 
 def load_ipython_extension(ip=__import__('IPython').get_ipython(), runner=run_cell):
@@ -110,17 +90,11 @@ def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
     load_ipython_extension(ip, InteractiveShell.run_cell)
 
 
-# In[ ]:
+# In[19]:
 
 
 if __name__ == '__main__':
     get_ipython().system('jupyter nbconvert --to python literacy.ipynb')
-
-
-# In[ ]:
-
-
-
 
 
 # In[ ]:
