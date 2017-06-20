@@ -1,16 +1,16 @@
 
 # coding: utf-8
 
-# In[22]:
+# In[1]:
 
 
 try: 
-    from literacy import renderer, dedent
+    from markdown import renderer
 except:
-    from .literacy import renderer, dedent
+    from .markdown import renderer
 
 
-# In[23]:
+# In[2]:
 
 
 from nbformat import NotebookNode
@@ -18,52 +18,10 @@ from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
 from nbconvert.filters import comment_lines
 from nbconvert.preprocessors import Preprocessor
 from traitlets import Any, Unicode
+__all__ = ['Explode', 'Dedent']
 
 
-# In[24]:
-
-
-class SplitSource(Preprocessor):
-    def preprocess_cell(self, cell, resources, index):
-        if isinstance(cell['source'], str):
-            cell['source'] = cell['source'].splitlines()
-        return cell, resources
-
-
-# In[25]:
-
-
-class JoinSource(Preprocessor):
-    def preprocess_cell(self, cell, resources, index):
-        if not isinstance(cell['source'], str):
-            cell['source'] = '\n'.join(cell['source'])
-        return cell, resources
-
-
-# In[26]:
-
-
-class SingleCell(Preprocessor):
-    new_cell = Any(default_value=new_markdown_cell)
-    def preprocess(self, nb, resources):
-        new_cell = self.new_cell()
-        for cell in nb.cells:
-            new_cell['source'] += '\n'+self.preprocess_cell(cell, resources, None)[0]['source']
-        return new_notebook(cells=[new_cell]), resources
-
-class SingleCode(SingleCell):
-    new_cell = Any(default_value=new_code_cell)
-    def preprocess_cell(self, cell, resources, index):
-        if cell['cell_type'] != 'code':
-            cell['source'] = comment_lines(cell['source'])
-        return cell, resources
-    # Attach outputs later
-    
-class SingleMarkdown(SingleCell):
-    new_cell = Any(default_value=new_markdown_cell)
-
-
-# In[27]:
+# In[3]:
 
 
 class NumberCell(Preprocessor):
@@ -72,7 +30,7 @@ class NumberCell(Preprocessor):
         return cell['metadata'].update({self.key:index}) or cell, resources
 
 
-# In[28]:
+# In[4]:
 
 
 class Explode(NumberCell):
@@ -87,7 +45,42 @@ class Explode(NumberCell):
         return nb.update(cells=cells) or nb, resources
 
 
-# In[29]:
+# In[5]:
+
+
+class SplitSource(Preprocessor):
+    def preprocess_cell(self, cell, resources, index):
+        if isinstance(cell['source'], str):
+            cell['source'] = cell['source'].splitlines()
+        return cell, resources
+
+
+# In[6]:
+
+
+class JoinSource(Preprocessor):
+    def preprocess_cell(self, cell, resources, index):
+        if not isinstance(cell['source'], str):
+            cell['source'] = '\n'.join(cell['source'])
+        return cell, resources
+
+
+# In[7]:
+
+
+def dedent(lines):
+    dedent, out = 0, []
+    if isinstance(lines, str):
+        lines = lines.splitlines()
+        
+    if any(map(str.strip, lines)):
+        dedent = next(filter(str.strip, lines))
+        dedent = len(dedent) - len(dedent.lstrip())
+    
+    return '\n'.join(map(lambda x: x[dedent:], lines))
+
+
+# In[8]:
 
 
 class Dedent(Preprocessor):

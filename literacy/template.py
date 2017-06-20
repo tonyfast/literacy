@@ -1,31 +1,35 @@
 
 # coding: utf-8
 
-# In[4]:
+# In[16]:
 
 
-try:
-    from literacy import run_cell, load_ipython_extension, unload_ipython_extension
+try: 
+    from repl import Literate, unload_ipython_extension
 except:
-    from .literacy import run_cell, load_ipython_extension, unload_ipython_extension
-from nbconvert.exporters.templateexporter import TemplateExporter
-exporter, _load = TemplateExporter(), load_ipython_extension
+    from .repl import Literate, unload_ipython_extension
 
 
-# In[5]:
+# In[17]:
 
 
-def run_template_cell(self, text: str, store_history=True, silent=True, shell_futures=True):
-    """Render a cell body as jinja template before running the code."""
-    return run_cell(
-        self, exporter.environment.from_string(text).render(**self.user_ns), store_history, silent, shell_futures)
+from nbconvert.exporters.base import export, get_exporter
+exporter = get_exporter('python')(config={})        
 
 
-# In[6]:
+# In[18]:
+
+
+class Template(Literate):            
+    def read(self, text):
+        return super().read(exporter.environment.from_string(text).render(**self.kernel.user_ns))
+
+
+# In[19]:
 
 
 def load_ipython_extension(ip=__import__('IPython').get_ipython()):
-    _load(ip, run_template_cell)
+    ip.run_cell = Template()
 
 
 # In[ ]:

@@ -3,20 +3,18 @@
 
 # 😵 simple __import__s for notebooks and markdown files.  All code elements are executed in order and imported into sys models.
 
-# In[16]:
+# In[35]:
 
 
 __all__ = []
 
 
-# In[18]:
+# In[36]:
 
 
 try: 
-    from literacy import renderer
     from preprocessors import Explode, Dedent, JoinSource
 except:
-    from .literacy import renderer
     from .preprocessors import Explode, Dedent, JoinSource
 
 from importlib.util import spec_from_loader
@@ -28,7 +26,7 @@ from nbconvert import get_exporter, export
 from nbformat.v4 import  new_notebook, new_code_cell
 
 
-# In[19]:
+# In[37]:
 
 
 class State(object):
@@ -47,13 +45,13 @@ class ExtensionFinder(State):
         return None
 
 
-# In[20]:
+# In[38]:
 
 
 exporter = get_exporter('python')(config={'Exporter': {'preprocessors': [Explode(), Dedent(), JoinSource()]}})
 
 
-# In[21]:
+# In[39]:
 
 
 class IpynbFinder(ExtensionFinder):
@@ -63,7 +61,7 @@ class IpynbFinder(ExtensionFinder):
             return exporter.from_filename(self.path)[0].encode('utf-8')
 
 
-# In[22]:
+# In[40]:
 
 
 class MdFinder(ExtensionFinder):
@@ -75,7 +73,7 @@ class MdFinder(ExtensionFinder):
                     new_notebook(cells=[new_code_cell(f.read())]))[0].encode('utf-8')
 
 
-# In[23]:
+# In[41]:
 
 
 def load_ipython_extension(ip=get_ipython()):
