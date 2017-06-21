@@ -5,10 +5,8 @@
 
 
 try: 
-    from markdown import renderer
     from preprocessors import Explode
 except:
-    from .markdown import renderer
     from .preprocessors import Explode
 from IPython.display import display, Markdown
 
@@ -56,23 +54,17 @@ class RunCell(Repl):
 # In[4]:
 
 
-class Display(RunCell):
+class Literate(RunCell):
     def read(self, text):
         display(Markdown(text))
         return text
-
-
-# In[5]:
-
-
-class Literate(Display):
     def eval(self, text):
         nb = super(Literate, self).eval(text)
         nb = Explode().preprocess(nb, {})[0]
         return nb
 
 
-# In[6]:
+# In[5]:
 
 
 def load_ipython_extension(ip=__import__('IPython').get_ipython()):
@@ -80,6 +72,12 @@ def load_ipython_extension(ip=__import__('IPython').get_ipython()):
 
 def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
     ip.run_cell = MethodType(InteractiveShell.run_cell, ip)
+
+
+# In[6]:
+
+
+load_ipython_extension()
 
 
 # In[ ]:
