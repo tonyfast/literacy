@@ -64,7 +64,7 @@ class Literate(RunCell):
         return nb
 
 
-# In[5]:
+# In[ ]:
 
 
 def load_ipython_extension(ip=__import__('IPython').get_ipython()):
@@ -72,12 +72,6 @@ def load_ipython_extension(ip=__import__('IPython').get_ipython()):
 
 def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
     ip.run_cell = MethodType(InteractiveShell.run_cell, ip)
-
-
-# In[6]:
-
-
-load_ipython_extension()
 
 
 # In[ ]:
