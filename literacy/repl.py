@@ -14,6 +14,7 @@ from nbformat import NotebookNode
 from nbformat.v4 import new_code_cell, new_notebook
 from types import MethodType
 
+from IPython import get_ipython
 from IPython.core.interactiveshell import InteractiveShell, ExecutionResult
 __all__ = []
 
@@ -64,7 +65,7 @@ class Literate(RunCell):
         return nb
 
 
-# In[ ]:
+# In[5]:
 
 
 def load_ipython_extension(ip=__import__('IPython').get_ipython()):

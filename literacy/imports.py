@@ -13,9 +13,9 @@ __all__ = []
 
 
 try: 
-    from preprocessors import Explode, Dedent, JoinSource
+    from preprocessors import Explode, JoinSource
 except:
-    from .preprocessors import Explode, Dedent, JoinSource
+    from .preprocessors import Explode, JoinSource
 
 from importlib.util import spec_from_loader
 from importlib.machinery import SourceFileLoader, FileFinder
@@ -48,7 +48,7 @@ class ExtensionFinder(State):
 # In[38]:
 
 
-exporter = get_exporter('python')(config={'Exporter': {'preprocessors': [Explode(), Dedent(), JoinSource()]}})
+exporter = get_exporter('python')(config={'Exporter': {'preprocessors': [Explode(), JoinSource()]}})
 
 
 # In[39]:
@@ -83,7 +83,7 @@ def load_ipython_extension(ip=get_ipython()):
     sys.path_importer_cache.clear()
 
 
-# In[ ]:
+# In[42]:
 
 
 if __name__ == '__main__': 
