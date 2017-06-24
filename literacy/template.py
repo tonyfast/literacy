@@ -5,9 +5,9 @@
 
 
 try: 
-    from repl import Literate, unload_ipython_extension
+    from repl import Literate, unload_ipython_extension, repl
 except:
-    from .repl import Literate, unload_ipython_extension
+    from .repl import Literate, unload_ipython_extension, repl
 
 
 # In[2]:
@@ -17,7 +17,7 @@ from nbconvert.exporters.base import export, get_exporter
 exporter = get_exporter('python')(config={})        
 
 
-# In[9]:
+# In[3]:
 
 
 class Template(Literate):
@@ -26,14 +26,13 @@ class Template(Literate):
         exporter.environment.from_string(text).render(**self.kernel.user_ns))
 
 
-# In[10]:
+# In[4]:
 
 
-def load_ipython_extension(ip=__import__('IPython').get_ipython()):
-    ip.run_cell = Template()
+load_ipython_extension = repl(Template)
 
 
-# In[11]:
+# In[5]:
 
 
 if __name__ == '__main__':

@@ -23,7 +23,9 @@ __all__ = []
 
 
 class Repl:
-    kernel = get_ipython()
+    def __init__(self, kernel):
+        self.kernel = kernel
+        
     def read(self, text):
         return text
     
@@ -32,7 +34,7 @@ class Repl:
 
     def print(*args, **kwargs): ...
 
-    def __call__(self, content, *args, **kwargs):
+    def run_cell(self, content, *args, **kwargs):
         if not isinstance(content, NotebookNode):
             content = self.read(content)
         node = self.eval(content)
@@ -68,8 +70,16 @@ class Literate(RunCell):
 # In[5]:
 
 
-def load_ipython_extension(ip=__import__('IPython').get_ipython()):
-    ip.run_cell = Literate()
+def repl(cls=Literate):
+    def _load_ipython_extension(ip=__import__("IPython").get_ipython()):
+        ip.run_cell = cls(ip).run_cell
+    return _load_ipython_extension
+
+
+# In[6]:
+
+
+load_ipython_extension = repl()
 
 def unload_ipython_extension(ip=__import__('IPython').get_ipython()):
     ip.run_cell = MethodType(InteractiveShell.run_cell, ip)
