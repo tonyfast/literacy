@@ -587,5 +587,5 @@ This tool was designed to tell stories about real data.  Since every code block 
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 31931 bytes to readme.md
+    [NbConvertApp] Writing 18189 bytes to readme.md
 
