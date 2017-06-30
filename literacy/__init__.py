@@ -14,15 +14,18 @@ except:
     from . import repl
     from . import markdown
     from . import template
-    
-importable.exporter.config['Exporter'].update(
-    preprocessors=[preprocessors.JoinSource, preprocessors.Explode]
-)
+    from . import finder
 
 
-# In[9]:
+# In[13]:
 
 
 if __name__ == '__main__':
     get_ipython().system('jupyter nbconvert --to python __init__.ipynb')
+
+
+# In[ ]:
+
+
+
 
