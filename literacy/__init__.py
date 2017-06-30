@@ -1,10 +1,10 @@
 
 # coding: utf-8
 
-# In[10]:
+# In[15]:
 
 
-import importable
+__import__('importable').load_ipython_extension()
 try:
     from template import unload_ipython_extension, load_ipython_extension
     import preprocessors
@@ -17,15 +17,9 @@ except:
     from . import finder
 
 
-# In[13]:
+# In[14]:
 
 
 if __name__ == '__main__':
     get_ipython().system('jupyter nbconvert --to python __init__.ipynb')
-
-
-# In[ ]:
-
-
-
 
