@@ -38,5 +38,6 @@ setuptools.setup(
         "Topic :: Software Development :: Testing",
     ],
     install_requires=['notebook'],
+    include_package_data=True,
     tests_require=[],
 )
