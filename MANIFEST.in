@@ -1,1 +1,1 @@
-recursive-include . *.ipynb
+recursive-include literacy *.ipynb
