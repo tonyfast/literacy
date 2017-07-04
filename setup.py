@@ -39,7 +39,8 @@ setuptools.setup(
     ],
     entry_points={
         'nbconvert.exporters': [
-            'literate = literacy.exporters:LiterateExporter'
+            'literate = literacy.exporters:LiterateExporter',
+            'code = literacy.exporters:CodeExporter',
         ]
     },
     install_requires=['notebook'],
