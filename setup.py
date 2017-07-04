@@ -37,6 +37,11 @@ setuptools.setup(
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Testing",
     ],
+    entry_points={
+        'nbconvert.exporters': [
+            'literate = literacy.exporters:LiterateExporter'
+        ]
+    },
     install_requires=['notebook'],
     include_package_data=True,
     tests_require=[],
