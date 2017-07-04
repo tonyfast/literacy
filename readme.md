@@ -229,187 +229,187 @@ This tool was designed to tell stories about real data.  Since every code block 
 `df=__import__('pandas').util.testing.makeDataFrame();df.head()` to make a __[pd:DataFrame][]__. 
 
 
-[pd:read_stata]: https://github.com/pandas/pandas#read_stata
+[pd:merge_ordered]: https://github.com/pandas/pandas#merge_ordered
+[pd:compat]: https://github.com/pandas/pandas#compat
+[pd:rolling_kurt]: https://github.com/pandas/pandas#rolling_kurt
+[pd:match]: https://github.com/pandas/pandas#match
+[pd:expanding_sum]: https://github.com/pandas/pandas#expanding_sum
+[pd:factorize]: https://github.com/pandas/pandas#factorize
+[pd:MultiIndex]: https://github.com/pandas/pandas#MultiIndex
+[pd:hashtable]: https://github.com/pandas/pandas#hashtable
+[pd:core]: https://github.com/pandas/pandas#core
+[pd:tools]: https://github.com/pandas/pandas#tools
+[pd:Term]: https://github.com/pandas/pandas#Term
+[pd:_testing]: https://github.com/pandas/pandas#_testing
+[pd:fama_macbeth]: https://github.com/pandas/pandas#fama_macbeth
+[pd:rolling_skew]: https://github.com/pandas/pandas#rolling_skew
+[pd:SparseTimeSeries]: https://github.com/pandas/pandas#SparseTimeSeries
+[pd:ExcelFile]: https://github.com/pandas/pandas#ExcelFile
+[pd:offsets]: https://github.com/pandas/pandas#offsets
 [pd:Int64Index]: https://github.com/pandas/pandas#Int64Index
-[pd:read_gbq]: https://github.com/pandas/pandas#read_gbq
-[pd:read_clipboard]: https://github.com/pandas/pandas#read_clipboard
+[pd:_np_version_under1p9]: https://github.com/pandas/pandas#_np_version_under1p9
 [pd:read_sql]: https://github.com/pandas/pandas#read_sql
+[pd:ewmvol]: https://github.com/pandas/pandas#ewmvol
+[pd:__file__]: https://github.com/pandas/pandas#__file__
+[pd:sparse]: https://github.com/pandas/pandas#sparse
+[pd:groupby]: https://github.com/pandas/pandas#groupby
+[pd:to_timedelta]: https://github.com/pandas/pandas#to_timedelta
+[pd:bdate_range]: https://github.com/pandas/pandas#bdate_range
+[pd:Grouper]: https://github.com/pandas/pandas#Grouper
+[pd:ols]: https://github.com/pandas/pandas#ols
+[pd:tslib]: https://github.com/pandas/pandas#tslib
+[pd:read_sql_query]: https://github.com/pandas/pandas#read_sql_query
+[pd:_join]: https://github.com/pandas/pandas#_join
+[pd:WidePanel]: https://github.com/pandas/pandas#WidePanel
+[pd:read_sql_table]: https://github.com/pandas/pandas#read_sql_table
+[pd:expanding_kurt]: https://github.com/pandas/pandas#expanding_kurt
+[pd:Expr]: https://github.com/pandas/pandas#Expr
 [pd:SparseDataFrame]: https://github.com/pandas/pandas#SparseDataFrame
+[pd:HDFStore]: https://github.com/pandas/pandas#HDFStore
+[pd:timedelta_range]: https://github.com/pandas/pandas#timedelta_range
+[pd:_sparse]: https://github.com/pandas/pandas#_sparse
+[pd:to_datetime]: https://github.com/pandas/pandas#to_datetime
+[pd:rolling_corr]: https://github.com/pandas/pandas#rolling_corr
+[pd:lreshape]: https://github.com/pandas/pandas#lreshape
+[pd:IndexSlice]: https://github.com/pandas/pandas#IndexSlice
+[pd:parser]: https://github.com/pandas/pandas#parser
+[pd:rolling_window]: https://github.com/pandas/pandas#rolling_window
+[pd:expanding_std]: https://github.com/pandas/pandas#expanding_std
+[pd:types]: https://github.com/pandas/pandas#types
+[pd:expanding_var]: https://github.com/pandas/pandas#expanding_var
+[pd:msgpack]: https://github.com/pandas/pandas#msgpack
+[pd:read_excel]: https://github.com/pandas/pandas#read_excel
+[pd:value_counts]: https://github.com/pandas/pandas#value_counts
+[pd:__builtins__]: https://github.com/pandas/pandas#__builtins__
+[pd:wide_to_long]: https://github.com/pandas/pandas#wide_to_long
+[pd:NaT]: https://github.com/pandas/pandas#NaT
+[pd:Timedelta]: https://github.com/pandas/pandas#Timedelta
+[pd:lib]: https://github.com/pandas/pandas#lib
+[pd:stats]: https://github.com/pandas/pandas#stats
+[pd:_np_version_under1p8]: https://github.com/pandas/pandas#_np_version_under1p8
+[pd:rolling_min]: https://github.com/pandas/pandas#rolling_min
+[pd:__package__]: https://github.com/pandas/pandas#__package__
+[pd:RangeIndex]: https://github.com/pandas/pandas#RangeIndex
+[pd:read_html]: https://github.com/pandas/pandas#read_html
+[pd:expanding_apply]: https://github.com/pandas/pandas#expanding_apply
+[pd:TimeGrouper]: https://github.com/pandas/pandas#TimeGrouper
+[pd:to_numeric]: https://github.com/pandas/pandas#to_numeric
+[pd:ewma]: https://github.com/pandas/pandas#ewma
+[pd:notnull]: https://github.com/pandas/pandas#notnull
+[pd:__loader__]: https://github.com/pandas/pandas#__loader__
+[pd:get_option]: https://github.com/pandas/pandas#get_option
+[pd:melt]: https://github.com/pandas/pandas#melt
+[pd:read_stata]: https://github.com/pandas/pandas#read_stata
+[pd:crosstab]: https://github.com/pandas/pandas#crosstab
+[pd:get_dummies]: https://github.com/pandas/pandas#get_dummies
+[pd:_np_version_under1p12]: https://github.com/pandas/pandas#_np_version_under1p12
+[pd:expanding_min]: https://github.com/pandas/pandas#expanding_min
+[pd:rolling_sum]: https://github.com/pandas/pandas#rolling_sum
+[pd:set_eng_float_format]: https://github.com/pandas/pandas#set_eng_float_format
+[pd:ewmcov]: https://github.com/pandas/pandas#ewmcov
+[pd:expanding_skew]: https://github.com/pandas/pandas#expanding_skew
+[pd:__cached__]: https://github.com/pandas/pandas#__cached__
+[pd:read_hdf]: https://github.com/pandas/pandas#read_hdf
+[pd:np]: https://github.com/pandas/pandas#np
+[pd:Index]: https://github.com/pandas/pandas#Index
+[pd:read_pickle]: https://github.com/pandas/pandas#read_pickle
+[pd:__doc__]: https://github.com/pandas/pandas#__doc__
+[pd:rolling_apply]: https://github.com/pandas/pandas#rolling_apply
+[pd:read_csv]: https://github.com/pandas/pandas#read_csv
+[pd:__path__]: https://github.com/pandas/pandas#__path__
+[pd:ordered_merge]: https://github.com/pandas/pandas#ordered_merge
+[pd:unique]: https://github.com/pandas/pandas#unique
+[pd:SparseList]: https://github.com/pandas/pandas#SparseList
+[pd:api]: https://github.com/pandas/pandas#api
+[pd:expanding_mean]: https://github.com/pandas/pandas#expanding_mean
+[pd:Series]: https://github.com/pandas/pandas#Series
+[pd:_period]: https://github.com/pandas/pandas#_period
+[pd:Timestamp]: https://github.com/pandas/pandas#Timestamp
+[pd:get_store]: https://github.com/pandas/pandas#get_store
+[pd:info]: https://github.com/pandas/pandas#info
+[pd:__name__]: https://github.com/pandas/pandas#__name__
+[pd:pivot_table]: https://github.com/pandas/pandas#pivot_table
+[pd:show_versions]: https://github.com/pandas/pandas#show_versions
+[pd:merge_asof]: https://github.com/pandas/pandas#merge_asof
+[pd:plot_params]: https://github.com/pandas/pandas#plot_params
+[pd:ExcelWriter]: https://github.com/pandas/pandas#ExcelWriter
+[pd:rolling_mean]: https://github.com/pandas/pandas#rolling_mean
+[pd:to_pickle]: https://github.com/pandas/pandas#to_pickle
+[pd:Panel4D]: https://github.com/pandas/pandas#Panel4D
+[pd:SparseSeries]: https://github.com/pandas/pandas#SparseSeries
+[pd:ewmstd]: https://github.com/pandas/pandas#ewmstd
+[pd:read_table]: https://github.com/pandas/pandas#read_table
+[pd:__docformat__]: https://github.com/pandas/pandas#__docformat__
+[pd:__spec__]: https://github.com/pandas/pandas#__spec__
+[pd:rolling_count]: https://github.com/pandas/pandas#rolling_count
+[pd:tseries]: https://github.com/pandas/pandas#tseries
+[pd:date_range]: https://github.com/pandas/pandas#date_range
+[pd:to_msgpack]: https://github.com/pandas/pandas#to_msgpack
+[pd:option_context]: https://github.com/pandas/pandas#option_context
+[pd:util]: https://github.com/pandas/pandas#util
+[pd:isnull]: https://github.com/pandas/pandas#isnull
+[pd:PeriodIndex]: https://github.com/pandas/pandas#PeriodIndex
+[pd:Float64Index]: https://github.com/pandas/pandas#Float64Index
+[pd:eval]: https://github.com/pandas/pandas#eval
+[pd:reset_option]: https://github.com/pandas/pandas#reset_option
+[pd:read_gbq]: https://github.com/pandas/pandas#read_gbq
+[pd:index]: https://github.com/pandas/pandas#index
+[pd:rolling_std]: https://github.com/pandas/pandas#rolling_std
+[pd:qcut]: https://github.com/pandas/pandas#qcut
+[pd:indexes]: https://github.com/pandas/pandas#indexes
 [pd:rolling_max]: https://github.com/pandas/pandas#rolling_max
 [pd:computation]: https://github.com/pandas/pandas#computation
-[pd:groupby]: https://github.com/pandas/pandas#groupby
-[pd:pivot]: https://github.com/pandas/pandas#pivot
-[pd:_np_version_under1p8]: https://github.com/pandas/pandas#_np_version_under1p8
-[pd:wide_to_long]: https://github.com/pandas/pandas#wide_to_long
-[pd:SparseSeries]: https://github.com/pandas/pandas#SparseSeries
-[pd:SparseTimeSeries]: https://github.com/pandas/pandas#SparseTimeSeries
-[pd:__path__]: https://github.com/pandas/pandas#__path__
-[pd:merge]: https://github.com/pandas/pandas#merge
-[pd:expanding_skew]: https://github.com/pandas/pandas#expanding_skew
-[pd:describe_option]: https://github.com/pandas/pandas#describe_option
-[pd:__cached__]: https://github.com/pandas/pandas#__cached__
-[pd:rolling_corr]: https://github.com/pandas/pandas#rolling_corr
-[pd:read_excel]: https://github.com/pandas/pandas#read_excel
-[pd:__version__]: https://github.com/pandas/pandas#__version__
-[pd:factorize]: https://github.com/pandas/pandas#factorize
-[pd:expanding_min]: https://github.com/pandas/pandas#expanding_min
-[pd:concat]: https://github.com/pandas/pandas#concat
-[pd:json]: https://github.com/pandas/pandas#json
-[pd:read_sql_query]: https://github.com/pandas/pandas#read_sql_query
-[pd:HDFStore]: https://github.com/pandas/pandas#HDFStore
-[pd:_np_version_under1p12]: https://github.com/pandas/pandas#_np_version_under1p12
-[pd:_version]: https://github.com/pandas/pandas#_version
-[pd:compat]: https://github.com/pandas/pandas#compat
-[pd:expanding_std]: https://github.com/pandas/pandas#expanding_std
-[pd:reset_option]: https://github.com/pandas/pandas#reset_option
-[pd:infer_freq]: https://github.com/pandas/pandas#infer_freq
-[pd:__name__]: https://github.com/pandas/pandas#__name__
-[pd:set_option]: https://github.com/pandas/pandas#set_option
-[pd:to_msgpack]: https://github.com/pandas/pandas#to_msgpack
-[pd:_window]: https://github.com/pandas/pandas#_window
-[pd:core]: https://github.com/pandas/pandas#core
-[pd:TimedeltaIndex]: https://github.com/pandas/pandas#TimedeltaIndex
-[pd:merge_ordered]: https://github.com/pandas/pandas#merge_ordered
-[pd:option_context]: https://github.com/pandas/pandas#option_context
-[pd:__doc__]: https://github.com/pandas/pandas#__doc__
-[pd:__spec__]: https://github.com/pandas/pandas#__spec__
-[pd:offsets]: https://github.com/pandas/pandas#offsets
-[pd:tseries]: https://github.com/pandas/pandas#tseries
-[pd:read_hdf]: https://github.com/pandas/pandas#read_hdf
-[pd:SparseArray]: https://github.com/pandas/pandas#SparseArray
-[pd:read_fwf]: https://github.com/pandas/pandas#read_fwf
-[pd:sparse]: https://github.com/pandas/pandas#sparse
-[pd:eval]: https://github.com/pandas/pandas#eval
-[pd:stats]: https://github.com/pandas/pandas#stats
-[pd:timedelta_range]: https://github.com/pandas/pandas#timedelta_range
-[pd:to_datetime]: https://github.com/pandas/pandas#to_datetime
-[pd:read_html]: https://github.com/pandas/pandas#read_html
-[pd:expanding_kurt]: https://github.com/pandas/pandas#expanding_kurt
-[pd:get_dummies]: https://github.com/pandas/pandas#get_dummies
-[pd:expanding_max]: https://github.com/pandas/pandas#expanding_max
-[pd:_join]: https://github.com/pandas/pandas#_join
-[pd:to_numeric]: https://github.com/pandas/pandas#to_numeric
-[pd:Expr]: https://github.com/pandas/pandas#Expr
-[pd:hashtable]: https://github.com/pandas/pandas#hashtable
-[pd:np]: https://github.com/pandas/pandas#np
-[pd:__package__]: https://github.com/pandas/pandas#__package__
-[pd:read_sas]: https://github.com/pandas/pandas#read_sas
-[pd:ewmstd]: https://github.com/pandas/pandas#ewmstd
-[pd:expanding_sum]: https://github.com/pandas/pandas#expanding_sum
-[pd:msgpack]: https://github.com/pandas/pandas#msgpack
-[pd:plot_params]: https://github.com/pandas/pandas#plot_params
-[pd:Panel4D]: https://github.com/pandas/pandas#Panel4D
-[pd:Grouper]: https://github.com/pandas/pandas#Grouper
-[pd:cut]: https://github.com/pandas/pandas#cut
-[pd:Period]: https://github.com/pandas/pandas#Period
-[pd:expanding_count]: https://github.com/pandas/pandas#expanding_count
-[pd:ExcelFile]: https://github.com/pandas/pandas#ExcelFile
-[pd:RangeIndex]: https://github.com/pandas/pandas#RangeIndex
-[pd:read_pickle]: https://github.com/pandas/pandas#read_pickle
-[pd:options]: https://github.com/pandas/pandas#options
-[pd:_np_version_under1p10]: https://github.com/pandas/pandas#_np_version_under1p10
-[pd:qcut]: https://github.com/pandas/pandas#qcut
-[pd:test]: https://github.com/pandas/pandas#test
-[pd:ordered_merge]: https://github.com/pandas/pandas#ordered_merge
-[pd:rolling_mean]: https://github.com/pandas/pandas#rolling_mean
-[pd:_np_version_under1p11]: https://github.com/pandas/pandas#_np_version_under1p11
-[pd:formats]: https://github.com/pandas/pandas#formats
-[pd:expanding_apply]: https://github.com/pandas/pandas#expanding_apply
-[pd:read_json]: https://github.com/pandas/pandas#read_json
-[pd:crosstab]: https://github.com/pandas/pandas#crosstab
-[pd:ewmcov]: https://github.com/pandas/pandas#ewmcov
-[pd:DateOffset]: https://github.com/pandas/pandas#DateOffset
-[pd:algos]: https://github.com/pandas/pandas#algos
-[pd:bdate_range]: https://github.com/pandas/pandas#bdate_range
-[pd:show_versions]: https://github.com/pandas/pandas#show_versions
-[pd:_sparse]: https://github.com/pandas/pandas#_sparse
-[pd:_period]: https://github.com/pandas/pandas#_period
-[pd:scatter_matrix]: https://github.com/pandas/pandas#scatter_matrix
-[pd:rolling_quantile]: https://github.com/pandas/pandas#rolling_quantile
-[pd:indexes]: https://github.com/pandas/pandas#indexes
-[pd:__file__]: https://github.com/pandas/pandas#__file__
-[pd:melt]: https://github.com/pandas/pandas#melt
-[pd:pandas]: https://github.com/pandas/pandas#pandas
-[pd:set_eng_float_format]: https://github.com/pandas/pandas#set_eng_float_format
-[pd:expanding_mean]: https://github.com/pandas/pandas#expanding_mean
-[pd:merge_asof]: https://github.com/pandas/pandas#merge_asof
-[pd:DatetimeIndex]: https://github.com/pandas/pandas#DatetimeIndex
-[pd:parser]: https://github.com/pandas/pandas#parser
-[pd:ewmvar]: https://github.com/pandas/pandas#ewmvar
-[pd:index]: https://github.com/pandas/pandas#index
-[pd:read_sql_table]: https://github.com/pandas/pandas#read_sql_table
-[pd:lreshape]: https://github.com/pandas/pandas#lreshape
-[pd:expanding_cov]: https://github.com/pandas/pandas#expanding_cov
-[pd:pivot_table]: https://github.com/pandas/pandas#pivot_table
-[pd:isnull]: https://github.com/pandas/pandas#isnull
-[pd:TimeGrouper]: https://github.com/pandas/pandas#TimeGrouper
-[pd:api]: https://github.com/pandas/pandas#api
-[pd:PeriodIndex]: https://github.com/pandas/pandas#PeriodIndex
-[pd:util]: https://github.com/pandas/pandas#util
-[pd:Timestamp]: https://github.com/pandas/pandas#Timestamp
-[pd:MultiIndex]: https://github.com/pandas/pandas#MultiIndex
-[pd:CategoricalIndex]: https://github.com/pandas/pandas#CategoricalIndex
-[pd:_np_version_under1p9]: https://github.com/pandas/pandas#_np_version_under1p9
-[pd:ols]: https://github.com/pandas/pandas#ols
-[pd:rolling_kurt]: https://github.com/pandas/pandas#rolling_kurt
-[pd:_testing]: https://github.com/pandas/pandas#_testing
-[pd:Index]: https://github.com/pandas/pandas#Index
-[pd:WidePanel]: https://github.com/pandas/pandas#WidePanel
-[pd:SparseList]: https://github.com/pandas/pandas#SparseList
-[pd:get_store]: https://github.com/pandas/pandas#get_store
-[pd:rolling_var]: https://github.com/pandas/pandas#rolling_var
-[pd:io]: https://github.com/pandas/pandas#io
-[pd:rolling_apply]: https://github.com/pandas/pandas#rolling_apply
-[pd:rolling_std]: https://github.com/pandas/pandas#rolling_std
-[pd:Categorical]: https://github.com/pandas/pandas#Categorical
-[pd:__docformat__]: https://github.com/pandas/pandas#__docformat__
-[pd:NaT]: https://github.com/pandas/pandas#NaT
-[pd:to_pickle]: https://github.com/pandas/pandas#to_pickle
-[pd:ewma]: https://github.com/pandas/pandas#ewma
-[pd:datetools]: https://github.com/pandas/pandas#datetools
-[pd:to_timedelta]: https://github.com/pandas/pandas#to_timedelta
-[pd:ewmcorr]: https://github.com/pandas/pandas#ewmcorr
-[pd:rolling_window]: https://github.com/pandas/pandas#rolling_window
-[pd:lib]: https://github.com/pandas/pandas#lib
-[pd:expanding_quantile]: https://github.com/pandas/pandas#expanding_quantile
 [pd:period_range]: https://github.com/pandas/pandas#period_range
-[pd:rolling_sum]: https://github.com/pandas/pandas#rolling_sum
-[pd:Float64Index]: https://github.com/pandas/pandas#Float64Index
-[pd:tslib]: https://github.com/pandas/pandas#tslib
-[pd:notnull]: https://github.com/pandas/pandas#notnull
-[pd:rolling_min]: https://github.com/pandas/pandas#rolling_min
-[pd:unique]: https://github.com/pandas/pandas#unique
-[pd:read_csv]: https://github.com/pandas/pandas#read_csv
-[pd:types]: https://github.com/pandas/pandas#types
-[pd:Panel]: https://github.com/pandas/pandas#Panel
-[pd:pnow]: https://github.com/pandas/pandas#pnow
-[pd:match]: https://github.com/pandas/pandas#match
-[pd:datetime]: https://github.com/pandas/pandas#datetime
-[pd:info]: https://github.com/pandas/pandas#info
-[pd:read_table]: https://github.com/pandas/pandas#read_table
-[pd:ewmvol]: https://github.com/pandas/pandas#ewmvol
+[pd:set_option]: https://github.com/pandas/pandas#set_option
 [pd:expanding_median]: https://github.com/pandas/pandas#expanding_median
-[pd:value_counts]: https://github.com/pandas/pandas#value_counts
-[pd:IndexSlice]: https://github.com/pandas/pandas#IndexSlice
-[pd:Term]: https://github.com/pandas/pandas#Term
-[pd:__loader__]: https://github.com/pandas/pandas#__loader__
-[pd:__builtins__]: https://github.com/pandas/pandas#__builtins__
-[pd:ExcelWriter]: https://github.com/pandas/pandas#ExcelWriter
-[pd:rolling_cov]: https://github.com/pandas/pandas#rolling_cov
-[pd:tools]: https://github.com/pandas/pandas#tools
-[pd:rolling_skew]: https://github.com/pandas/pandas#rolling_skew
-[pd:Series]: https://github.com/pandas/pandas#Series
-[pd:date_range]: https://github.com/pandas/pandas#date_range
-[pd:fama_macbeth]: https://github.com/pandas/pandas#fama_macbeth
-[pd:DataFrame]: https://github.com/pandas/pandas#DataFrame
-[pd:get_option]: https://github.com/pandas/pandas#get_option
-[pd:expanding_var]: https://github.com/pandas/pandas#expanding_var
-[pd:expanding_corr]: https://github.com/pandas/pandas#expanding_corr
-[pd:Timedelta]: https://github.com/pandas/pandas#Timedelta
-[pd:rolling_count]: https://github.com/pandas/pandas#rolling_count
-[pd:TimeSeries]: https://github.com/pandas/pandas#TimeSeries
-[pd:rolling_median]: https://github.com/pandas/pandas#rolling_median
+[pd:pnow]: https://github.com/pandas/pandas#pnow
+[pd:merge]: https://github.com/pandas/pandas#merge
 [pd:read_msgpack]: https://github.com/pandas/pandas#read_msgpack
+[pd:algos]: https://github.com/pandas/pandas#algos
+[pd:_np_version_under1p10]: https://github.com/pandas/pandas#_np_version_under1p10
+[pd:test]: https://github.com/pandas/pandas#test
+[pd:_np_version_under1p11]: https://github.com/pandas/pandas#_np_version_under1p11
+[pd:DateOffset]: https://github.com/pandas/pandas#DateOffset
+[pd:_window]: https://github.com/pandas/pandas#_window
+[pd:Panel]: https://github.com/pandas/pandas#Panel
+[pd:formats]: https://github.com/pandas/pandas#formats
+[pd:rolling_var]: https://github.com/pandas/pandas#rolling_var
+[pd:SparseArray]: https://github.com/pandas/pandas#SparseArray
+[pd:infer_freq]: https://github.com/pandas/pandas#infer_freq
+[pd:Period]: https://github.com/pandas/pandas#Period
+[pd:datetime]: https://github.com/pandas/pandas#datetime
+[pd:expanding_quantile]: https://github.com/pandas/pandas#expanding_quantile
+[pd:expanding_count]: https://github.com/pandas/pandas#expanding_count
+[pd:scatter_matrix]: https://github.com/pandas/pandas#scatter_matrix
+[pd:options]: https://github.com/pandas/pandas#options
+[pd:ewmvar]: https://github.com/pandas/pandas#ewmvar
+[pd:expanding_max]: https://github.com/pandas/pandas#expanding_max
+[pd:concat]: https://github.com/pandas/pandas#concat
+[pd:read_sas]: https://github.com/pandas/pandas#read_sas
+[pd:describe_option]: https://github.com/pandas/pandas#describe_option
+[pd:datetools]: https://github.com/pandas/pandas#datetools
+[pd:pandas]: https://github.com/pandas/pandas#pandas
+[pd:io]: https://github.com/pandas/pandas#io
+[pd:_version]: https://github.com/pandas/pandas#_version
+[pd:DataFrame]: https://github.com/pandas/pandas#DataFrame
+[pd:read_clipboard]: https://github.com/pandas/pandas#read_clipboard
+[pd:rolling_quantile]: https://github.com/pandas/pandas#rolling_quantile
+[pd:CategoricalIndex]: https://github.com/pandas/pandas#CategoricalIndex
+[pd:rolling_median]: https://github.com/pandas/pandas#rolling_median
+[pd:read_json]: https://github.com/pandas/pandas#read_json
+[pd:expanding_cov]: https://github.com/pandas/pandas#expanding_cov
+[pd:Categorical]: https://github.com/pandas/pandas#Categorical
+[pd:read_fwf]: https://github.com/pandas/pandas#read_fwf
+[pd:DatetimeIndex]: https://github.com/pandas/pandas#DatetimeIndex
+[pd:TimeSeries]: https://github.com/pandas/pandas#TimeSeries
+[pd:__version__]: https://github.com/pandas/pandas#__version__
+[pd:TimedeltaIndex]: https://github.com/pandas/pandas#TimedeltaIndex
+[pd:rolling_cov]: https://github.com/pandas/pandas#rolling_cov
+[pd:cut]: https://github.com/pandas/pandas#cut
+[pd:json]: https://github.com/pandas/pandas#json
+[pd:expanding_corr]: https://github.com/pandas/pandas#expanding_corr
+[pd:ewmcorr]: https://github.com/pandas/pandas#ewmcorr
+[pd:pivot]: https://github.com/pandas/pandas#pivot
 
 
 
@@ -428,39 +428,39 @@ This tool was designed to tell stories about real data.  Since every code block 
   </thead>
   <tbody>
     <tr>
-      <th>SDf1BTNg2H</th>
-      <td>0.047172</td>
-      <td>-1.852776</td>
-      <td>0.603858</td>
-      <td>0.430012</td>
+      <th>8Ljn0SGMo5</th>
+      <td>0.146886</td>
+      <td>0.322416</td>
+      <td>0.044168</td>
+      <td>0.352853</td>
     </tr>
     <tr>
-      <th>wG76qV7W9y</th>
-      <td>-0.274920</td>
-      <td>-0.454935</td>
-      <td>1.288556</td>
-      <td>1.598037</td>
+      <th>z0FwGbiyUd</th>
+      <td>-1.018506</td>
+      <td>0.471733</td>
+      <td>-1.205537</td>
+      <td>-0.698043</td>
     </tr>
     <tr>
-      <th>OSIrokOIi3</th>
-      <td>-0.432110</td>
-      <td>0.382211</td>
-      <td>1.238428</td>
-      <td>-0.557180</td>
+      <th>DUC2ZJepio</th>
+      <td>-0.276977</td>
+      <td>-0.941129</td>
+      <td>1.486763</td>
+      <td>0.442387</td>
     </tr>
     <tr>
-      <th>pKqJo9rQhe</th>
-      <td>-0.146874</td>
-      <td>-2.869897</td>
-      <td>1.617484</td>
-      <td>0.066000</td>
+      <th>uVxQrDvSKO</th>
+      <td>-1.915858</td>
+      <td>0.512783</td>
+      <td>-1.454368</td>
+      <td>-0.850423</td>
     </tr>
     <tr>
-      <th>0LKZFRmxRW</th>
-      <td>0.751461</td>
-      <td>0.501270</td>
-      <td>2.123044</td>
-      <td>-0.924629</td>
+      <th>91XcXqBoQZ</th>
+      <td>-0.319190</td>
+      <td>1.118365</td>
+      <td>1.978914</td>
+      <td>0.703926</td>
     </tr>
   </tbody>
 </table>
@@ -501,52 +501,52 @@ This tool was designed to tell stories about real data.  Since every code block 
     </tr>
     <tr>
       <th>mean</th>
-      <td>-0.017317</td>
-      <td>-0.237950</td>
-      <td>0.254655</td>
-      <td>-0.010835</td>
+      <td>-0.167767</td>
+      <td>0.094383</td>
+      <td>-0.089906</td>
+      <td>0.209136</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>0.953377</td>
-      <td>0.944980</td>
-      <td>0.999442</td>
-      <td>0.981480</td>
+      <td>0.804183</td>
+      <td>0.991608</td>
+      <td>1.134586</td>
+      <td>1.027796</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>-1.699766</td>
-      <td>-2.869897</td>
-      <td>-2.113209</td>
-      <td>-2.146972</td>
+      <td>-1.915858</td>
+      <td>-2.158519</td>
+      <td>-1.902018</td>
+      <td>-2.109670</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>-0.576941</td>
-      <td>-0.897749</td>
-      <td>-0.454231</td>
-      <td>-0.567761</td>
+      <td>-0.711773</td>
+      <td>-0.842485</td>
+      <td>-1.092959</td>
+      <td>-0.520564</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>0.016629</td>
-      <td>-0.221985</td>
-      <td>0.176629</td>
-      <td>-0.007592</td>
+      <td>-0.058032</td>
+      <td>0.261942</td>
+      <td>-0.206085</td>
+      <td>0.142370</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>0.447102</td>
-      <td>0.426445</td>
-      <td>1.122386</td>
-      <td>0.755851</td>
+      <td>0.409570</td>
+      <td>0.655962</td>
+      <td>0.810606</td>
+      <td>0.827205</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>1.825131</td>
-      <td>1.747997</td>
-      <td>2.123044</td>
-      <td>1.598037</td>
+      <td>1.418127</td>
+      <td>1.933278</td>
+      <td>1.991167</td>
+      <td>2.466091</td>
     </tr>
   </tbody>
 </table>
@@ -587,5 +587,5 @@ This tool was designed to tell stories about real data.  Since every code block 
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 18189 bytes to readme.md
+    [NbConvertApp] Writing 18187 bytes to readme.md
 
