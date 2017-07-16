@@ -5,7 +5,6 @@ try:
     from . import literate
     from . import template
     from . import finder
-    from . import patch
 except:
     import finder
 finder.load_ipython_extension()
