@@ -1,0 +1,1 @@
+[{"value": {"cell_type": "code", "source": ["    def load_ipython_extension(ip=None):\n", "        unload('ipynb')\n", "        finder('ipynb')(IPyMd)\n"]}, "path": "/cells/6", "op": "replace"}]
