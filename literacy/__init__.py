@@ -4,7 +4,5 @@ try:
     from .literate import load_ipython_extension
     from . import literate
     from . import template
-    from . import finder
 except:
-    import finder
-finder.load_ipython_extension()
+    pass
