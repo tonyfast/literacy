@@ -6,3 +6,5 @@ try:
     from . import template
 except:
     pass
+
+Execute = literate.Execute
