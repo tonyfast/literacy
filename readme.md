@@ -45,9 +45,47 @@ and add annotations in between lines of code.
 
 ## Templating Mode
 
+    %load_ext literacy.template
+    
+Templating mode passes the markdown source through a `__import__('jinja2').Template` before 
+the tangling and weaving steps.  The template has access to variables in `globals` and the
+IPython user namespace. 
+
+
+
+
+
+    <function globals>
+
+
+
+
+### Template Example
+
+#### A question about typography?
+
+Which rendered code is preferable for teaching a new programmer?
+
+##### Python <code>for</code> loops?
+    
+    for i in range(5): foo(i)
+      
+##### A block of literal code?
+
+    foo(0)
+    foo(1)
+    foo(2)
+    foo(3)
+    foo(4)
+    
+    
+The code above has access to `foo;` defined above and returns a valid set of copypasta source.
+
 
 
 ## [Importing Literate Notebooks](docs/imports.md).
+
+All literacy notebooks including templated notebooks are importable if they are run-all-able.
 
 
 
@@ -88,6 +126,10 @@ Place a url in the code cell to show a webiste as an <code>iframe</code>.
 Begin a code cell with a blank to suppress output.
 
 
+    code
+
+
+
 #### Motivation
 
 Literate programming with Markdown encourages code blocks to have a single indent.  In IPython 
@@ -108,23 +150,12 @@ The blank line opinion makes it more difficult to activate an `IndentationError`
     👍
 
 
-    code
 
+### Escaping Code
+
+All markdown code blocks are executed, but html code blocks can be used to ignore code, or 
+use python comments.
 
 
     !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipynb
     !jupyter nbconvert --to markdown --config docs/tconfig.py docs/*.ipynb
-
-
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2785 bytes to readme.md
-    [NbConvertApp] Converting notebook docs/display-objects.ipynb to markdown
-    [NbConvertApp] Executing notebook with kernel: python3
-    [NbConvertApp] Writing 1703 bytes to docs/display-objects.md
-    [NbConvertApp] Converting notebook docs/imports.ipynb to markdown
-    [NbConvertApp] Executing notebook with kernel: python3
-    [NbConvertApp] Writing 1549 bytes to docs/imports.md
-    [NbConvertApp] Converting notebook docs/nbconversions.ipynb to markdown
-    [NbConvertApp] Executing notebook with kernel: python3
-    [NbConvertApp] Writing 1201 bytes to docs/nbconversions.md
-
