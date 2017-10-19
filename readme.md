@@ -35,11 +35,19 @@ Compose functions in markdown...
     def foo(a): 
         b = 42*a
 and add annotations in between lines of code.
-        return 42*a
+        
+        return b
 
 
     inline
     block code
+
+
+
+### Considerations
+
+In literate programming mode all cells are markdown cells.  Code cells have a binary option
+of being 🔛 or 📴 where the cell is rendered as basic markdown.
 
 
 
