@@ -1,7 +1,7 @@
 
 # __literacy__ - interactive literate programming in markdown
 
-> [`...`](http://roxygen.org/knuth-literate-programming.pdf) considering programs to works of literature. `...`  surely nobody wants to admit writing an _illiterate_ program.
+> [`...`](http://roxygen.org/knuth-literate-programming.pdf) considering programs to be works of literature. `...`  surely nobody wants to admit writing an _illiterate_ program.
 > - _Donald Knuth_ - **Literate Programming** 
 
 ## Installation
