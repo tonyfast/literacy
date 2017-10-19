@@ -48,15 +48,8 @@ and add annotations in between lines of code.
     %load_ext literacy.template
     
 Templating mode passes the markdown source through a `__import__('jinja2').Template` before 
-the tangling and weaving steps.  The template has access to variables in `globals` and the
+the tangling and weaving steps.  The template has access to variables in `globals;` and the
 IPython user namespace. 
-
-
-
-
-
-    <function globals>
-
 
 
 
@@ -79,7 +72,12 @@ Which rendered code is preferable for teaching a new programmer?
     foo(4)
     
     
-The code above has access to `foo;` defined above and returns a valid set of copypasta source.
+    
+#### Template Scope
+
+The code above has access to `foo;` defined previously.  A notebook should restart and run all, 
+in template mode all variables used in templates must be defined in a prior cell.  Consider 
+`b=False`, `assert ~b` is available to the python scope not the jinja scope.
 
 
 
