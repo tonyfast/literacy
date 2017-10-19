@@ -12,6 +12,8 @@
     
 ### Activate literacy
 
+    %load_ext literacy
+
 
 Literacy transforms all code cells to interactive blocks of markdown.  When a cell is executed:
     
@@ -38,6 +40,10 @@ and add annotations in between lines of code.
 
     inline
     block code
+
+
+
+## Templating Mode
 
 
 
@@ -106,57 +112,12 @@ The blank line opinion makes it more difficult to activate an `IndentationError`
 
 
 
-    !jupyter nbconvert --to markdown --config docs/config.py readme.ipynb
+    !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipynb
     !jupyter nbconvert --to markdown --config docs/tconfig.py docs/*.ipynb
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Executing notebook with kernel: python3
-    [NbConvertApp] ERROR | Error while converting 'readme.ipynb'
-    Traceback (most recent call last):
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/nbconvertapp.py", line 381, in export_single_notebook
-        output, resources = self.exporter.from_filename(notebook_filename, resources=resources)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/exporters/exporter.py", line 172, in from_filename
-        return self.from_file(f, resources=resources, **kw)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/exporters/exporter.py", line 190, in from_file
-        return self.from_notebook_node(nbformat.read(file_stream, as_version=4), resources=resources, **kw)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/exporters/templateexporter.py", line 268, in from_notebook_node
-        nb_copy, resources = super(TemplateExporter, self).from_notebook_node(nb, resources, **kw)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/exporters/exporter.py", line 132, in from_notebook_node
-        nb_copy, resources = self._preprocess(nb_copy, resources)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/exporters/exporter.py", line 309, in _preprocess
-        nbc, resc = preprocessor(nbc, resc)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/preprocessors/base.py", line 47, in __call__
-        return self.preprocess(nb,resources)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/preprocessors/execute.py", line 242, in preprocess
-        nb, resources = super(ExecutePreprocessor, self).preprocess(nb, resources)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/preprocessors/base.py", line 70, in preprocess
-        nb.cells[index], resources = self.preprocess_cell(cell, resources, index)
-      File "/Users/tonyfast/anaconda/lib/python3.5/site-packages/nbconvert/preprocessors/execute.py", line 275, in preprocess_cell
-        raise CellExecutionError(msg)
-    nbconvert.preprocessors.execute.CellExecutionError: An error occurred while executing the following cell:
-    ------------------
-    
-    # coding: utf-8
-    
-    # In[ ]:
-    
-    
-    print('inline')
-    print('block code')
-    
-    
-    def foo(a):
-        b = 42*a
-    
-    
-        return 42*a
-    
-    
-    ------------------
-    
-    SyntaxError: 'return' outside function (<ipython-input-2-083e2d18f9c8>, line 7)
-    
+    [NbConvertApp] Writing 2785 bytes to readme.md
     [NbConvertApp] Converting notebook docs/display-objects.ipynb to markdown
     [NbConvertApp] Executing notebook with kernel: python3
     [NbConvertApp] Writing 1703 bytes to docs/display-objects.md
