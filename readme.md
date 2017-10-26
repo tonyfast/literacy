@@ -10,9 +10,38 @@
     %%bash
     pip install git+https://github.com/tonyfast/literacy
     
-### Activate literacy
 
-    %load_ext literacy
+# Literate programming magics
+
+The magics are activated using the import system.  The `load_ext` methods change the run_cell
+behavior.
+
+
+# The `literacy` magic 
+
+This cell magic tangles markdown code elements into executable code.
+
+    print("I am code.")
+
+
+    I am code.
+
+
+
+Template the markdown `assert __import__('jinja2')` syntax. For example, `...`
+
+    print(4)
+    print(5)
+    print(6)
+    
+
+
+    4
+    5
+    6
+
+
+# Interactive Literate Programming as a default
 
 
 Literacy transforms all code cells to interactive blocks of markdown.  When a cell is executed:
@@ -162,6 +191,5 @@ The blank line opinion makes it more difficult to activate an `IndentationError`
 All markdown code blocks are executed, but html code blocks can be used to ignore code, or 
 use python comments.
 
+<code>this code ain't gonna get run.</code>
 
-    !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipynb
-    !jupyter nbconvert --to markdown --config docs/tconfig.py docs/*.ipynb
