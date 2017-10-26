@@ -193,3 +193,6 @@ use python comments.
 
 <code>this code ain't gonna get run.</code>
 
+
+    !jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipynb
+    !jupyter nbconvert --to markdown --config docs/tconfig.py docs/*.ipynb
