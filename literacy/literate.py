@@ -55,9 +55,6 @@ def macro(code):
 exporter = PythonExporter()
 
 
-
-
-
 class Code(Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
@@ -134,12 +131,16 @@ class Transformer(UserList, InputTransformer):
             display.display(*self.macro(body))
             
     def reset(self, display=True, *, ns=None):
-        body = self.weave('\n'.join(self))
-        display and self.display(body)
+        try:
+            source = '\n'.join(self)
+            source = self.weave(source)
+        except:
+            raise SyntaxError(source)
+        display and self.display(source)
         self.data = []
         return (
-            body.lstrip().startswith('---') and identity or filters.ipython2python
-        )(self.tangle(body, ns=ns or self.shell.user_ns))
+            source.lstrip().startswith('---') and identity or filters.ipython2python
+        )(self.tangle(source, ns=ns or self.shell.user_ns))
     
     def parse(self, display, line="""""", body=None, *, ns=None):
         self.data = line and [line] or [] + (body or """""").splitlines()
