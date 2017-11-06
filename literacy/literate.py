@@ -184,6 +184,7 @@ load_ipython_extension = extension(Literate)
 def unload_ipython_extension(ip=get_ipython()):
     sys.meta_path = list(filter(
         lambda x: not isinstance(x, Importer), sys.meta_path))
+    sys.path_importer_cache.clear()
 
 
 if __name__ == '__main__':
