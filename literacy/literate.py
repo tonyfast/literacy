@@ -180,7 +180,11 @@ class Importer(SourceFileLoader):
     def exec_module(self, module):
         nb = reads(Path(self.path).read_text(), 4)
         for cell in nb.cells:
-            cell['cell_type'] == 'code' and exec(self.tangle(cell.source), vars(module))
+            if cell['cell_type'] == 'code':
+                try:
+                    exec(self.tangle(cell.source), vars(module))
+                except:
+                    raise Exception('in ```\n{}```'.format(cell.source))
         return module
 
     def find_spec(self, name, *args):
@@ -193,7 +197,7 @@ class Importer(SourceFileLoader):
         return spec
 
 
-# In[9]:
+# In[ ]:
 
 
 def extension(transformer):
@@ -210,7 +214,7 @@ def unload_ipython_extension(ip=get_ipython()):
         lambda x: not isinstance(x, Importer), sys.meta_path))
 
 
-# In[10]:
+# In[ ]:
 
 
 if __name__ == '__main__':
