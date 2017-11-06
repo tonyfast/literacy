@@ -135,7 +135,10 @@ def literate_yaml(source, ns={}):
     import yaml
     source = literate(source)
     if source.lstrip().startswith('---'):
-        [ns.update(stream) for stream in yaml.safe_load_all(textwrap.dedent(source))]
+        for stream in yaml.safe_load_all(textwrap.dedent(source)):
+            if not isinstance(stream, dict): 
+                raise SyntaxError("""Each yaml stream must be a dictionary.""")
+            ns.update(stream)
         source = """"""
     return filters.ipython2python(source)
 
@@ -150,10 +153,12 @@ class Importer(SourceFileLoader):
         return ModuleType(self.name)
     
     def exec_module(self, module):
-        [
-            exec(self.tangle(cell.source, ns=module.__dict__), module.__dict__)
-            for cell in reads(Path(self.path).read_text(), 4).cells 
-            if cell['cell_type'] == 'code']
+        for cell in reads(Path(self.path).read_text(), 4).cells:
+            try:
+                if cell['cell_type'] == 'code': exec(
+                    self.tangle(cell.source, ns=module.__dict__), module.__dict__)
+            except: 
+                raise ImportError(cell.source)
         return module
 
     def find_spec(self, name, paths, target=None):
