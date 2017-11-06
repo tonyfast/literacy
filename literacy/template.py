@@ -5,19 +5,19 @@ from importlib import machinery
 
 
 try:
-    from .literate import LiterateTransformer, extension, exporter
+    from .literate import Literate, extension, exporter
 except:
-    from literate import LiterateTransformer, extension, exporter
+    from literate import Literate, extension, exporter
 import sys
 
 
-class TemplateTransformer(LiterateTransformer):
+class Template(Literate):
     def weave(self, code):
         return exporter.environment.from_string(code).render(
             getattr(self.shell, 'user_ns', dict))
 
 
-load_ipython_extension = extension(TemplateTransformer.instance())
+load_ipython_extension = extension(Template)
 
 
 if __name__ == '__main__':

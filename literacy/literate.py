@@ -20,8 +20,10 @@ from mistune import Markdown, Renderer
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
 from nbconvert import export, get_exporter, filters, exporters
 from nbconvert.exporters.python import PythonExporter    
-from toolz.curried import compose, do, identity, merge, second, partial
+from toolz.curried import compose, do, identity as identity_, merge, second, partial, drop
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
+
+import textwrap 
 
 
 def macro(code):
@@ -53,6 +55,9 @@ def macro(code):
 exporter = PythonExporter()
 
 
+
+
+
 class Code(Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
@@ -64,46 +69,46 @@ class Code(Renderer):
         return super(Code, self).block_code(code, lang)
 
     def codespan(self, code):
-        """Weave inline code references"""
         if self.inline_code:
             if self.inline_indent:
-                self.code += ' '*self.indents(self.code) + code + '\n'
+                self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
             else:
                 self.code += code + '\n'
         return super(Code, self).codespan(code)
     
     @staticmethod
-    def indents(code):
+    def _indent(code):
         """Determine the indent length of the last line."""
-        if code:
-            str = list(filter(lambda s: s.strip(), code.splitlines()))
-            if str:  
-                return len(str[-1])-len(str[-1].lstrip())
+        if str:  return len(str[-1])-len(str[-1].lstrip())
         return 0
 
 
 class Tangle(Markdown):
     """A mistune.Markdown processor for literate programming."""
     def render(self, text, **kwargs):
-        self.renderer.code = """"""
+        code = self.renderer.code = """"""
         super(Tangle, self).render(text, **kwargs)
+        if self.renderer.code.lstrip().startswith('---'): 
+            return self.renderer.code
         code = exporter.from_notebook_node(
             new_notebook(cells=[new_code_cell(self.renderer.code)]))[0]
-        return code
+        return self.renderer.code
 
     __call__ = render
 
 literate = Tangle(renderer=Code(), escape=False)
 
 
-Identity = identity(lambda x: x)
+identity = identity_(lambda x: x)
 
 
-class IdentityTransformer(UserList, InputTransformer):
-    weave = staticmethod(Identity)
-    tangle = staticmethod(Identity)
-    macro = staticmethod(Identity)
+class Transformer(UserList, InputTransformer):
+    """weave --> macro --> tangle"""
     push = UserList.append
+    
+    tangle = staticmethod(identity)
+    macro = staticmethod(identity)
+    weave = staticmethod(identity)
     
     def register_transforms(self):
         self.shell.input_transformer_manager.logical_line_transforms =         self.shell.input_transformer_manager.physical_line_transforms = []
@@ -128,29 +133,41 @@ class IdentityTransformer(UserList, InputTransformer):
         else:
             display.display(*self.macro(body))
             
-    def reset(self, display=True):
+    def reset(self, display=True, *, ns=None):
         body = self.weave('\n'.join(self))
         display and self.display(body)
         self.data = []
-        return filters.ipython2python(self.tangle(body))
+        return (
+            body.lstrip().startswith('---') and identity or filters.ipython2python
+        )(self.tangle(body, ns=ns or self.shell.user_ns))
     
-    def run(self, display, line="""""", body=None):
+    def parse(self, display, line="""""", body=None, *, ns=None):
         self.data = line and [line] or [] + (body or """""").splitlines()
-        return self.reset(display)
+        return self.reset(display, ns=ns)
     
-    __call__ = partialmethod(run, False)
+    __call__ = partialmethod(parse, False)
     def run_code(self, line="""""", body=None):
-        self.shell.run_code(self.run(True, line, body))
+        self.shell.run_code(self.parse(True, line, body))
 
 
-class LiterateTransformer(IdentityTransformer):
-    tangle = staticmethod(literate)
+def literate_yaml(source, ns={}):
+    import yaml
+    if source.lstrip().startswith('---'):
+        [ns.update(stream) for stream in yaml.safe_load_all(textwrap.dedent(source))]
+        return """"""
+    return literate(source)
+
+
+class Literate(Transformer):
+    tangle = staticmethod(literate_yaml)
     macro = staticmethod(macro)
 
 
 class Importer(SourceFileLoader):
-    tangle = None            
-    def create_module(self, spec):
+    """"""
+    tranformer = None            
+    
+    def create_module(self, spec): 
         return ModuleType(self.name)
     
     def exec_module(self, module):
@@ -158,7 +175,8 @@ class Importer(SourceFileLoader):
         for cell in nb.cells:
             if cell['cell_type'] == 'code':
                 try:
-                    exec(self.tangle(cell.source), module.__dict__)
+                    source = self.tangle(cell.source, ns=module.__dict__)
+                    exec(source, module.__dict__)
                 except:
                     raise Exception('in ```\n{}```'.format(cell.source))
         return module
@@ -177,12 +195,14 @@ class Importer(SourceFileLoader):
 
 def extension(transformer):
     def load_ipython_extension(ip=get_ipython()):
+        nonlocal transformer
+        transformer = transformer.instance()
         Importer.tangle = staticmethod(transformer)
         transformer.register_transforms(), transformer.register_magic()
         sys.meta_path.append(Importer(None, None)), sys.path_importer_cache.clear()
     return load_ipython_extension
 
-load_ipython_extension = extension(LiterateTransformer.instance())
+load_ipython_extension = extension(Literate)
     
 def unload_ipython_extension(ip=get_ipython()):
     sys.meta_path = list(filter(
@@ -190,5 +210,6 @@ def unload_ipython_extension(ip=get_ipython()):
 
 
 if __name__ == '__main__':
+    load_ipython_extension()
     get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
 
