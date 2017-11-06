@@ -76,7 +76,7 @@ class Code(Renderer):
     @staticmethod
     def _indent(code):
         """Determine the indent length of the last line."""
-        if str:  return len(str[-1])-len(str[-1].lstrip())
+        if code:  return len(code[-1])-len(code[-1].lstrip())
         return 0
 
 
@@ -97,6 +97,9 @@ literate = Tangle(renderer=Code(), escape=False)
 
 
 identity = identity_(lambda x: x)
+
+
+import warnings
 
 
 class Transformer(UserList, InputTransformer):
@@ -135,12 +138,14 @@ class Transformer(UserList, InputTransformer):
             source = '\n'.join(self)
             source = self.weave(source)
         except:
-            raise SyntaxError(source)
+            warnings.warn("""Unable to completely weave \n\n```%s```"""%source)
+            pass
         display and self.display(source)
         self.data = []
+        source = self.tangle(source, ns=ns or self.shell.user_ns)
         return (
             source.lstrip().startswith('---') and identity or filters.ipython2python
-        )(self.tangle(source, ns=ns or self.shell.user_ns))
+        )(source)
     
     def parse(self, display, line="""""", body=None, *, ns=None):
         self.data = line and [line] or [] + (body or """""").splitlines()
