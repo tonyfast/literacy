@@ -7,7 +7,7 @@ from pathlib import Path
 from os.path import sep, curdir, extsep, exists
 from nbformat import *
 from operator import ne
-import sys
+import sys, textwrap, warnings
 PY2 = sys.version_info.major is 2
 from inspect import *
 from collections import UserList
@@ -19,11 +19,11 @@ from IPython.core.interactiveshell import InteractiveShell
 from mistune import Markdown, Renderer
 from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
 from nbconvert import export, get_exporter, filters, exporters
-from nbconvert.exporters.python import PythonExporter    
 from toolz.curried import compose, do, identity as identity_, merge, second, partial, drop
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
 
-import textwrap 
+
+identity = identity_(lambda x: x)
 
 
 def macro(code):
@@ -48,29 +48,19 @@ def macro(code):
         if __import__('pathlib').Path(code).is_file(): 
             return disp(filename=code),
     except OSError: pass
-    
     return tuple()
-
-
-exporter = PythonExporter()
 
 
 class Code(Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
-    inline_code = True
-    inline_indent = True
     
     def block_code(self, code, lang=None):
         self.code += code + '\n'
         return super(Code, self).block_code(code, lang)
 
     def codespan(self, code):
-        if self.inline_code:
-            if self.inline_indent:
-                self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
-            else:
-                self.code += code + '\n'
+        self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
         return super(Code, self).codespan(code)
     
     @staticmethod
@@ -83,23 +73,13 @@ class Code(Renderer):
 class Tangle(Markdown):
     """A mistune.Markdown processor for literate programming."""
     def render(self, text, **kwargs):
-        code = self.renderer.code = """"""
+        self.renderer.code = """"""
         super(Tangle, self).render(text, **kwargs)
-        if self.renderer.code.lstrip().startswith('---'): 
-            return self.renderer.code
-        code = exporter.from_notebook_node(
-            new_notebook(cells=[new_code_cell(self.renderer.code)]))[0]
         return self.renderer.code
 
     __call__ = render
 
 literate = Tangle(renderer=Code(), escape=False)
-
-
-identity = identity_(lambda x: x)
-
-
-import warnings
 
 
 class Transformer(UserList, InputTransformer):
@@ -111,7 +91,8 @@ class Transformer(UserList, InputTransformer):
     weave = staticmethod(identity)
     
     def register_transforms(self):
-        self.shell.input_transformer_manager.logical_line_transforms =         self.shell.input_transformer_manager.physical_line_transforms = []
+        self.shell.input_transformer_manager.logical_line_transforms = []
+        self.shell.input_transformer_manager.physical_line_transforms = []
         self.shell.input_transformer_manager.python_line_transforms = [self]
 
     def register_magic(self):
@@ -134,26 +115,23 @@ class Transformer(UserList, InputTransformer):
             display.display(*self.macro(body))
             
     def reset(self, display=True, *, ns=None):
+        source, self.data = '\n'.join(self), []
         try:
-            source = '\n'.join(self)
             source = self.weave(source)
         except:
-            warnings.warn("""Unable to completely weave \n\n```%s```"""%source)
-            pass
+            warnings.warn("""Unable to completely weave the source.""")
         display and self.display(source)
-        self.data = []
-        source = self.tangle(source, ns=ns or self.shell.user_ns)
-        return (
-            source.lstrip().startswith('---') and identity or filters.ipython2python
-        )(source)
+        
+        return self.tangle(source, ns=ns or self.shell.user_ns)
     
+    def run_code(self, line="""""", body=None):
+        self.shell.run_code(self.parse(True, line, body))
+        
     def parse(self, display, line="""""", body=None, *, ns=None):
         self.data = line and [line] or [] + (body or """""").splitlines()
         return self.reset(display, ns=ns)
     
     __call__ = partialmethod(parse, False)
-    def run_code(self, line="""""", body=None):
-        self.shell.run_code(self.parse(True, line, body))
 
 
 def literate_yaml(source, ns={}):
@@ -161,8 +139,8 @@ def literate_yaml(source, ns={}):
     source = literate(source)
     if source.lstrip().startswith('---'):
         [ns.update(stream) for stream in yaml.safe_load_all(textwrap.dedent(source))]
-        return """"""
-    return source
+        source = """"""
+    return filters.ipython2python(source)
 
 
 class Literate(Transformer):
@@ -171,21 +149,14 @@ class Literate(Transformer):
 
 
 class Importer(SourceFileLoader):
-    """"""
-    tranformer = None            
-    
-    def create_module(self, spec): 
+    def create_module(self, spec):  
         return ModuleType(self.name)
     
     def exec_module(self, module):
-        nb = reads(Path(self.path).read_text(), 4)
-        for cell in nb.cells:
-            if cell['cell_type'] == 'code':
-                try:
-                    source = self.tangle(cell.source, ns=module.__dict__)
-                    exec(source, module.__dict__)
-                except:
-                    raise Exception('in ```\n{}```'.format(cell.source))
+        [
+            exec(self.tangle(cell.source, ns=module.__dict__), module.__dict__)
+            for cell in reads(Path(self.path).read_text(), 4).cells 
+            if cell['cell_type'] == 'code']
         return module
 
     def find_spec(self, name, paths, target=None):
@@ -195,8 +166,7 @@ class Importer(SourceFileLoader):
     def find_module(self, name, paths, target=None):
         for path in paths or [Path()]:
             path = (path/Path(name.split('.')[-1])).with_suffix('.ipynb')
-            if path.exists(): 
-                return Importer(name, str(path))
+            if path.exists(): return Importer(name, str(path))
         return None
 
 

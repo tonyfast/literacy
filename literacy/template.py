@@ -1,14 +1,12 @@
 
 # coding: utf-8
 
-from importlib import machinery
-
-
 try:
-    from .literate import Literate, extension, exporter
+    from .literate import Literate, extension
 except:
-    from literate import Literate, extension, exporter
-import sys
+    from literate import Literate, extension
+from nbconvert.exporters.python import PythonExporter    
+exporter = PythonExporter()
 
 
 class Template(Literate):
