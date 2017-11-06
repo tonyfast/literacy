@@ -158,10 +158,11 @@ class Transformer(UserList, InputTransformer):
 
 def literate_yaml(source, ns={}):
     import yaml
+    source = literate(source)
     if source.lstrip().startswith('---'):
         [ns.update(stream) for stream in yaml.safe_load_all(textwrap.dedent(source))]
         return """"""
-    return literate(source)
+    return source
 
 
 class Literate(Transformer):
