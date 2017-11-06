@@ -182,22 +182,24 @@ class Importer(SourceFileLoader):
         for cell in nb.cells:
             if cell['cell_type'] == 'code':
                 try:
-                    exec(self.tangle(cell.source), vars(module))
+                    exec(self.tangle(cell.source), module.__dict__)
                 except:
                     raise Exception('in ```\n{}```'.format(cell.source))
         return module
 
-    def find_spec(self, name, *args):
-        spec = FileFinder(name, (Importer, ['.ipynb'])).find_spec(name)
-        if not spec:
-            path = Path(name).with_suffix('.ipynb')
-            if path.exists():
-                spec = importlib.util.spec_from_file_location(
-                    name, str(path), loader=Importer(name, str(path)))
-        return spec
+    def find_spec(self, name, paths, target=None):
+        loader =  self.find_module(name, paths, target)
+        return loader and importlib.util.spec_from_loader(name, loader)
+
+    def find_module(self, name, paths, target=None):
+        for path in paths or [Path()]:
+            path = (path/Path(name.split('.')[-1])).with_suffix('.ipynb')
+            if path.exists(): 
+                return Importer(name, str(path))
+        return None
 
 
-# In[ ]:
+# In[9]:
 
 
 def extension(transformer):
@@ -214,7 +216,7 @@ def unload_ipython_extension(ip=get_ipython()):
         lambda x: not isinstance(x, Importer), sys.meta_path))
 
 
-# In[ ]:
+# In[10]:
 
 
 if __name__ == '__main__':
