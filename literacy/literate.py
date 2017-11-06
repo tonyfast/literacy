@@ -107,7 +107,7 @@ class Transformer(UserList, InputTransformer):
 
     def display(self, body):
         if self and self[0].strip(): display.display(*(
-            self.macro(body) or [display.Markdown(body)]
+            len(self) is 1 and self.macro(body) or [display.Markdown(body)]
         ))
             
     def reset(self, display=True, *, ns=None):
