@@ -1,9 +1,6 @@
 
 # coding: utf-8
 
-# In[1]:
-
-
 from types import ModuleType
 from importlib.machinery import SourceFileLoader, FileFinder
 from pathlib import Path
@@ -25,9 +22,6 @@ from nbconvert import export, get_exporter, filters, exporters
 from nbconvert.exporters.python import PythonExporter    
 from toolz.curried import compose, do, identity, merge, second, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
-
-
-# In[2]:
 
 
 def macro(code):
@@ -56,13 +50,7 @@ def macro(code):
     return tuple()
 
 
-# In[3]:
-
-
 exporter = PythonExporter()
-
-
-# In[4]:
 
 
 class Code(Renderer):
@@ -108,13 +96,7 @@ class Tangle(Markdown):
 literate = Tangle(renderer=Code(), escape=False)
 
 
-# In[5]:
-
-
 Identity = identity(lambda x: x)
-
-
-# In[6]:
 
 
 class IdentityTransformer(UserList, InputTransformer):
@@ -161,15 +143,9 @@ class IdentityTransformer(UserList, InputTransformer):
         self.shell.run_code(self.run(True, line, body))
 
 
-# In[7]:
-
-
 class LiterateTransformer(IdentityTransformer):
     tangle = staticmethod(literate)
     macro = staticmethod(macro)
-
-
-# In[8]:
 
 
 class Importer(SourceFileLoader):
@@ -199,9 +175,6 @@ class Importer(SourceFileLoader):
         return None
 
 
-# In[9]:
-
-
 def extension(transformer):
     def load_ipython_extension(ip=get_ipython()):
         Importer.tangle = staticmethod(transformer)
@@ -216,9 +189,6 @@ def unload_ipython_extension(ip=get_ipython()):
         lambda x: not isinstance(x, Importer), sys.meta_path))
 
 
-# In[10]:
-
-
 if __name__ == '__main__':
-    get_ipython().system('jupyter nbconvert --to python literate.ipynb')
+    get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
 
