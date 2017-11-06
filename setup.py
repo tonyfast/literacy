@@ -43,7 +43,7 @@ setuptools.setup(
 #            'code = literacy.exporters:CodeExporter',
 #        ]
 #    },
-    install_requires=['notebook', 'toolz'],
+    install_requires=['notebook', 'toolz', 'pyyaml'],
     include_package_data=True,
     tests_require=[],
 )
