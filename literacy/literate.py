@@ -106,10 +106,9 @@ class Transformer(UserList, InputTransformer):
         return type(self).__name__.replace('Transformer', '').lower()
 
     def display(self, body):
-        if self and self[0].strip():
-            display.display(display.Markdown(body))
-        else:
-            display.display(*self.macro(body))
+        if self and self[0].strip(): display.display(*(
+            self.macro(body) or [display.Markdown(body)]
+        ))
             
     def reset(self, display=True, *, ns=None):
         source = '\n'.join(self)
