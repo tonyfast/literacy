@@ -2,24 +2,21 @@
 # coding: utf-8
 
 from types import ModuleType
-from importlib.machinery import SourceFileLoader, FileFinder
+from importlib.machinery import SourceFileLoader
 from pathlib import Path
-from os.path import sep, curdir, extsep, exists
-from nbformat import *
-from operator import ne
 import sys, textwrap, warnings
 PY2 = sys.version_info.major is 2
-from inspect import *
 from collections import UserList
+from importlib.util import spec_from_loader
 from IPython.core.inputtransformer import InputTransformer
 from fnmatch import fnmatch
 from functools import partial, partialmethod
 from IPython import get_ipython, display
 from IPython.core.interactiveshell import InteractiveShell
 from mistune import Markdown, Renderer
-from nbformat.v4 import new_notebook, new_code_cell, new_markdown_cell
-from nbconvert import export, get_exporter, filters, exporters
-from toolz.curried import compose, do, identity as identity_, merge, second, partial, drop
+from nbconvert import filters
+from nbformat import reads
+from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
 
 
@@ -115,13 +112,13 @@ class Transformer(UserList, InputTransformer):
             display.display(*self.macro(body))
             
     def reset(self, display=True, *, ns=None):
-        source, self.data = '\n'.join(self), []
+        source = '\n'.join(self)
         try:
             source = self.weave(source)
         except:
             warnings.warn("""Unable to completely weave the source.""")
         display and self.display(source)
-        
+        self.data = []
         return self.tangle(source, ns=ns or self.shell.user_ns)
     
     def run_code(self, line="""""", body=None):
@@ -161,7 +158,7 @@ class Importer(SourceFileLoader):
 
     def find_spec(self, name, paths, target=None):
         loader =  self.find_module(name, paths, target)
-        return loader and importlib.util.spec_from_loader(name, loader)
+        return loader and spec_from_loader(name, loader)
 
     def find_module(self, name, paths, target=None):
         for path in paths or [Path()]:
