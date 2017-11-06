@@ -53,7 +53,8 @@ class Code(Renderer):
     code = """"""
     
     def block_code(self, code, lang=None):
-        self.code += code + '\n'
+        if lang is None:
+            self.code += code + '\n'
         return super(Code, self).block_code(code, lang)
 
     def codespan(self, code):
