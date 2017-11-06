@@ -14,7 +14,7 @@ import sys
 class Template(Literate):
     def weave(self, code):
         return exporter.environment.from_string(code).render(
-            getattr(self.shell, 'user_ns', dict))
+            getattr(self.shell, 'user_ns', dict()))
 
 
 load_ipython_extension = extension(Template)
