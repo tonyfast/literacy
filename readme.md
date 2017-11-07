@@ -14,6 +14,10 @@ pip install git+https://github.com/tonyfast/literacy
     
 
 
+```
+    %reload_ext literacy
+```
+
 ---
     import literacy
     
@@ -101,7 +105,7 @@ _`literacy;` makes it possible to import any notebook._
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 4976 bytes to readme.md
+    [NbConvertApp] Writing 2343 bytes to readme.md
 
 
 
