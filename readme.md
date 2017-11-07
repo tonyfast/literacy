@@ -38,7 +38,7 @@ source code.  _All code in this block is executed._
 
     %reload_ext literacy.template
 
-Template mode users `__import__('jinja2');` to weave variables in scope into the markdown source.
+Template mode applies `__import__('jinja2');` to weave variables in scope into the markdown source.
 
 
 
@@ -105,7 +105,7 @@ _`literacy;` makes it possible to import any notebook._
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2343 bytes to readme.md
+    [NbConvertApp] Writing 2350 bytes to readme.md
 
 
 
@@ -118,4 +118,8 @@ jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipy
 ```
 
 add the <code>--execute</code> flag to execute the notebook before it is converted.
+
+
+    [NbConvertApp] Converting notebook readme.ipynb to markdown
+    [NbConvertApp] Writing 2233 bytes to readme.md
 
