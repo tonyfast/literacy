@@ -4,7 +4,7 @@
 from types import ModuleType
 from importlib.machinery import SourceFileLoader
 from pathlib import Path
-import sys, textwrap, warnings
+import sys, textwrap, warnings, mistune
 PY2 = sys.version_info.major is 2
 from collections import UserList
 from importlib.util import spec_from_loader
@@ -13,7 +13,6 @@ from fnmatch import fnmatch
 from functools import partial, partialmethod
 from IPython import get_ipython, display
 from IPython.core.interactiveshell import InteractiveShell
-from mistune import Markdown, Renderer
 from nbconvert import filters
 from nbformat import reads
 from toolz.curried import identity as identity_, partial
@@ -48,12 +47,14 @@ def macro(code):
     return tuple()
 
 
-class Code(Renderer):
+class Code(mistune.Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
     
     def block_code(self, code, lang=None):
-        if lang is None:
+        if lang and type(lang) is str:
+            self.code = '%%'+lang+'\n'
+        if lang or lang is None:
             self.code += code + '\n'
         return super(Code, self).block_code(code, lang)
 
@@ -68,7 +69,7 @@ class Code(Renderer):
         return 0
 
 
-class Tangle(Markdown):
+class Tangle(mistune.Markdown):
     """A mistune.Markdown processor for literate programming."""
     def render(self, text, **kwargs):
         self.renderer.code = """"""
@@ -143,7 +144,7 @@ def literate_yaml(source, ns={}):
     return filters.ipython2python(source)
 
 
-class Literate(Transformer):
+class Markdown(Transformer):
     tangle = staticmethod(literate_yaml)
     macro = staticmethod(macro)
 
@@ -181,7 +182,7 @@ def extension(transformer):
         sys.meta_path.append(Importer(None, None)), sys.path_importer_cache.clear()
     return load_ipython_extension
 
-load_ipython_extension = extension(Literate)
+load_ipython_extension = extension(Markdown)
     
 def unload_ipython_extension(ip=get_ipython()):
     sys.meta_path = list(filter(
