@@ -19,13 +19,13 @@ pip install git+https://github.com/tonyfast/literacy
 ```
 
 ---
-    import literacy
     
-`literacy` accepts Markdown as source; the __inline__ and __indented__ code objects are concatenated into a single block of __python__ 
+`import literacy` accepts Markdown as source; the __inline__ and __indented__ code objects are concatenated into a single block of __python__ 
 source code.  _All code in this block is executed._
 
     foo = 42
     print(foo)
+    assert literacy
     
 ---
 
