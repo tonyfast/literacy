@@ -52,9 +52,10 @@ class Code(mistune.Renderer):
     code = """"""
     
     def block_code(self, code, lang=None):
-        if lang and type(lang) is str:
+        if lang and lang.startswith('%'):
             self.code = '%%'+lang+'\n'
-        if lang or lang is None:
+            lang = None
+        if lang is None:
             self.code += code + '\n'
         return super(Code, self).block_code(code, lang)
 
