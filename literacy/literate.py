@@ -118,10 +118,14 @@ class Transformer(UserList, InputTransformer):
         try:
             source = self.weave(source)
         except:
-            warnings.warn("""Unable to completely weave the source.""")
+            warnings.warn("""Unable to weave the source.""")
         display and self.display(source)
         self.data = []
-        return self.tangle(source, ns=ns or self.shell.user_ns)
+        try:
+            source = self.tangle(source, ns=ns or self.shell.user_ns)
+        except:
+            warnings.warn("""Unable to tangle the source.""")
+        return source
     
     def run_code(self, line="""""", body=None):
         self.shell.run_code(self.parse(True, line, body))
