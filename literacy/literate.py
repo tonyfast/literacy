@@ -51,12 +51,11 @@ class Code(mistune.Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
     
-    def block_code(self, code, lang=None):
-        if lang and lang.startswith('%'):
-            self.code = '%%'+lang+'\n'
-            lang = None
-        if lang is None:
+    def block_code(self, code, lang=""):
+        if not lang:
             self.code += code + '\n'
+        if lang and lang.startswith('%%'):
+            self.code = lang + '\n' + code
         return super(Code, self).block_code(code, lang)
 
     def codespan(self, code):
@@ -114,6 +113,7 @@ class Transformer(UserList, InputTransformer):
         ))
             
     def reset(self, display=True, *, ns=None):
+        """This function must complete or IPython hangs."""
         source = '\n'.join(self)
         try:
             source = self.weave(source)
@@ -135,6 +135,8 @@ class Transformer(UserList, InputTransformer):
         return self.reset(display, ns=ns)
     
     __call__ = partialmethod(parse, False)
+    
+    __repr__ = InputTransformer.__repr__
 
 
 def literate_yaml(source, ns={}):
@@ -178,12 +180,16 @@ class Importer(SourceFileLoader):
         return None
 
 
+def skip(line, code):...
+
+
 def extension(transformer):
     def load_ipython_extension(ip=get_ipython()):
         nonlocal transformer
         transformer = transformer.instance()
         Importer.tangle = staticmethod(transformer)
         transformer.register_transforms(), transformer.register_magic()
+        ip.register_magic_function(skip, 'cell')
         sys.meta_path.append(Importer(None, None)), sys.path_importer_cache.clear()
     return load_ipython_extension
 
@@ -198,4 +204,10 @@ def unload_ipython_extension(ip=get_ipython()):
 if __name__ == '__main__':
     load_ipython_extension()
     get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
+
+
+TESt
+
+    get_ipython().magic('%skip')
+    print(10)
 
