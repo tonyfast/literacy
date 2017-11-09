@@ -10,9 +10,8 @@ exporter = PythonExporter()
 
 
 class Jinja2(Markdown):
-    def weave(self, code):
-        return exporter.environment.from_string(code).render(
-            getattr(self.shell, 'user_ns', dict()))
+    def weave(self, code, ns=dict()):
+        return exporter.environment.from_string(code).render(**ns)
 
 
 load_ipython_extension = extension(Jinja2)

@@ -19,7 +19,7 @@ from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
 
 
-identity = identity_(lambda x: x)
+identity = identity_(lambda x, ns: x)
 
 
 def macro(code):
@@ -65,8 +65,7 @@ class Code(mistune.Renderer):
     @staticmethod
     def _indent(code):
         """Determine the indent length of the last line."""
-        if code:  return len(code[-1])-len(code[-1].lstrip())
-        return 0
+        return code and len(code[-1])-len(code[-1].lstrip()) or 0
 
 
 class Tangle(mistune.Markdown):
@@ -74,7 +73,7 @@ class Tangle(mistune.Markdown):
     def render(self, text, **kwargs):
         self.renderer.code = """"""
         super(Tangle, self).render(text, **kwargs)
-        return self.renderer.code
+        return textwrap.dedent(self.renderer.code)
 
     __call__ = render
 
@@ -115,14 +114,15 @@ class Transformer(UserList, InputTransformer):
     def reset(self, display=True, *, ns=None):
         """This function must complete or IPython hangs."""
         source = '\n'.join(self)
+        ns = ns or self.shell.user_ns
         try:
-            source = self.weave(source)
-        except:
+            source = self.weave(source, ns=ns)
+        except Exception as e:
             warnings.warn("""Unable to weave the source.""")
         display and self.display(source)
         self.data = []
         try:
-            source = self.tangle(source, ns=ns or self.shell.user_ns)
+            source = self.tangle(source, ns=ns)
         except:
             warnings.warn("""Unable to tangle the source.""")
         return source
@@ -130,7 +130,7 @@ class Transformer(UserList, InputTransformer):
     def run_code(self, line="""""", body=None):
         self.shell.run_code(self.parse(True, line, body))
         
-    def parse(self, display, line="""""", body=None, *, ns=None):
+    def parse(self, display:bool, line="""""", body=None, *, ns=None):
         self.data = line and [line] or [] + (body or """""").splitlines()
         return self.reset(display, ns=ns)
     
@@ -143,7 +143,7 @@ def literate_yaml(source, ns={}):
     import yaml
     source = literate(source)
     if source.lstrip().startswith('---'):
-        for stream in yaml.safe_load_all(textwrap.dedent(source)):
+        for stream in yaml.safe_load_all(source):
             if not isinstance(stream, dict): 
                 raise SyntaxError("""Each yaml stream must be a dictionary.""")
             ns.update(stream)
@@ -181,6 +181,7 @@ class Importer(SourceFileLoader):
 
 
 def skip(line, code):...
+get_ipython() and get_ipython().register_magic_function(skip, 'cell')
 
 
 def extension(transformer):
@@ -189,7 +190,6 @@ def extension(transformer):
         transformer = transformer.instance()
         Importer.tangle = staticmethod(transformer)
         transformer.register_transforms(), transformer.register_magic()
-        ip.register_magic_function(skip, 'cell')
         sys.meta_path.append(Importer(None, None)), sys.path_importer_cache.clear()
     return load_ipython_extension
 
