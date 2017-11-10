@@ -17,6 +17,7 @@ from nbconvert import filters
 from nbformat import reads, v4
 from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
+HR = '---'
 
 
 def identity(*args, **kwargs): return args[0]
@@ -142,13 +143,23 @@ class Transformer(UserList, InputTransformer):
 def literate_yaml(source, ns={}):
     import yaml
     source = literate(source)
-    if source.lstrip().startswith('---'):
+    if source.lstrip().startswith(HR):
         for stream in yaml.safe_load_all(source):
             if not isinstance(stream, dict): 
                 raise SyntaxError("""Each yaml stream must be a dictionary.""")
             ns.update(stream)
         source = """"""
     return filters.ipython2python(source)
+
+
+def load_markdown(source):
+    """Convert markdown to a notebook by separately cells with dividers."""
+    nb = v4.new_notebook(cells=[v4.new_code_cell("""""")])
+    for line in source.splitlines():
+        if line.startswith(HR):
+            nb.cells.append(v4.new_code_cell(""""""))
+        nb.cells[-1].source += line + '\n'
+    return nb
 
 
 class Markdown(Transformer):
@@ -164,14 +175,13 @@ class Importer(SourceFileLoader):
         path = Path(self.path)
         source = path.read_text()
         nb = (
-            v4.new_notebook(cells=[v4.new_code_cell(source)])
+            load_markdown(source)
             if path.suffix in ('.markdown', '.md') 
-            else reads(source, 4)
-        )
+            else reads(source, 4))
         for cell in nb.cells:
             try:
                 if cell['cell_type'] == 'code': exec(
-                    self.tangle(cell.source, ns=module.__dict__), module.__dict__)
+                    self.transformer(cell.source, ns=module.__dict__), module.__dict__)
             except: 
                 raise ImportError(cell.source)
         return module
@@ -192,7 +202,7 @@ def extension(transformer):
     def load_ipython_extension(ip=get_ipython()):
         nonlocal transformer
         transformer = transformer.instance()
-        Importer.tangle = staticmethod(transformer)
+        Importer.transformer = staticmethod(transformer)
         transformer.register_transforms(), transformer.register_magic()
         sys.meta_path.append(Importer(None, None)), sys.path_importer_cache.clear()
     return load_ipython_extension
