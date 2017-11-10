@@ -188,10 +188,6 @@ class Importer(SourceFileLoader):
         return None
 
 
-def skip(line, code):...
-get_ipython() and get_ipython().register_magic_function(skip, 'cell')
-
-
 def extension(transformer):
     def load_ipython_extension(ip=get_ipython()):
         nonlocal transformer
