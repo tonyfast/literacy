@@ -14,12 +14,12 @@ from functools import partial, partialmethod
 from IPython import get_ipython, display
 from IPython.core.interactiveshell import InteractiveShell
 from nbconvert import filters
-from nbformat import reads
+from nbformat import reads, v4
 from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
 
 
-identity = identity_(lambda x, ns: x)
+def identity(*args, **kwargs): return args[0]
 
 
 def macro(code):
@@ -161,7 +161,14 @@ class Importer(SourceFileLoader):
         return ModuleType(self.name)
     
     def exec_module(self, module):
-        for cell in reads(Path(self.path).read_text(), 4).cells:
+        path = Path(self.path)
+        source = path.read_text()
+        nb = (
+            v4.new_notebook(cells=[v4.new_code_cell(source)])
+            if path.suffix in ('.markdown', '.md') 
+            else reads(source, 4)
+        )
+        for cell in nb.cells:
             try:
                 if cell['cell_type'] == 'code': exec(
                     self.tangle(cell.source, ns=module.__dict__), module.__dict__)
@@ -174,9 +181,10 @@ class Importer(SourceFileLoader):
         return loader and spec_from_loader(name, loader)
 
     def find_module(self, name, paths, target=None):
-        for path in paths or [Path()]:
-            path = (path/Path(name.split('.')[-1])).with_suffix('.ipynb')
-            if path.exists(): return Importer(name, str(path))
+        for ext in ['.ipynb', '.md', '.markdown']:
+            for path in paths or [Path()]:
+                path = (path/Path(name.split('.')[-1])).with_suffix(ext)
+                if path.exists(): return Importer(name, str(path))
         return None
 
 
