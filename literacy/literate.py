@@ -17,6 +17,8 @@ from nbconvert import filters
 from nbformat import reads, v4
 from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
+from nbconvert.exporters.templateexporter import TemplateExporter    
+exporter = TemplateExporter()
 HR = '---'
 
 
@@ -84,9 +86,10 @@ literate = Tangle(renderer=Code(), escape=False)
 class Transformer(UserList, InputTransformer):
     """weave --> macro --> tangle"""
     push = UserList.append
+    env = exporter.environment
+    template = False
     
     tangle = staticmethod(identity)
-    macro = staticmethod(identity)
     weave = staticmethod(identity)
     
     def register_transforms(self):
@@ -107,22 +110,36 @@ class Transformer(UserList, InputTransformer):
     def name(self):
         return type(self).__name__.replace('Transformer', '').lower()
 
-    def display(self, body):
-        if self and self[0].strip(): display.display(*(
-            len(self) is 1 and self.macro(body) or [display.Markdown(body)]
-        ))
-            
-    def reset(self, display=True, *, ns=None):
+    
+    def macro(self, body, *, ns=dict(), out=tuple()):
+        if isinstance(body, self.env.template_class):
+            body = body.render(**ns)
+        if len(self) is 1 and self[0].strip():
+            out = macro(body)
+        if not out:
+            out = display.Markdown(data=body),
+        return out
+    
+    def reset(self, disp=True, *, ns=dict()):
         """This function must complete or IPython hangs."""
         source = '\n'.join(self)
+        if self.template:
+            try:
+                source = self.env.from_string(source)
+            except Exception as e:
+                warnings.warn("""Unable to weave the source.""")
+        
         ns = ns or self.shell.user_ns
-        try:
-            source = self.weave(source, ns=ns)
-        except Exception as e:
-            warnings.warn("""Unable to weave the source.""")
-        display and self.display(source)
+        
+        if self and disp:
+            output = self.macro(source, ns=ns)
+            output and display.display(*output)
+        
         self.data = []
+
         try:
+            if isinstance(source, self.env.template_class):
+                source = source.render(**ns)
             source = self.tangle(source, ns=ns)
         except:
             warnings.warn("""Unable to tangle the source.""")
@@ -131,9 +148,10 @@ class Transformer(UserList, InputTransformer):
     def run_code(self, line="""""", body=None):
         self.shell.run_code(self.parse(True, line, body))
         
-    def parse(self, display:bool, line="""""", body=None, *, ns=None):
-        self.data = line and [line] or [] + (body or """""").splitlines()
-        return self.reset(display, ns=ns)
+    def parse(self, disp:bool, line="""""", body=None, *, ns=dict()):
+        self.data = line and [line] or []
+        self.data += (body or """""").splitlines()
+        return self.reset(disp, ns=ns)
     
     __call__ = partialmethod(parse, False)
     
@@ -164,7 +182,6 @@ def load_markdown(source):
 
 class Markdown(Transformer):
     tangle = staticmethod(literate_yaml)
-    macro = staticmethod(macro)
 
 
 class Importer(SourceFileLoader):

@@ -2,16 +2,13 @@
 # coding: utf-8
 
 try:
-    from .literate import Markdown, extension
+    from .literate import Markdown, extension, unload_ipython_extension
 except:
-    from literate import Markdown, extension
-from nbconvert.exporters.python import PythonExporter    
-exporter = PythonExporter()
+    from literate import Markdown, extension, unload_ipython_extension
 
 
 class Jinja2(Markdown):
-    def weave(self, code, ns=dict()):
-        return exporter.environment.from_string(code).render(**ns)
+    template = True
 
 
 load_ipython_extension = extension(Jinja2)
