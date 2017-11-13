@@ -27,26 +27,31 @@ def identity(*args, **kwargs): return args[0]
 
 def macro(code):
     from IPython import display
-    type = mimetypes.guess_type(code)[0]
-    is_image = type and type.startswith('image')
-    disp = (
-        partial(display.Image, embed=True) 
-        if is_image else display.Markdown)
-    if fnmatch(code, '*[[]*[]](*)'):
-        url = (
-            code.lstrip('#').lstrip()
-            .split(']', 1)[1].lstrip('(')
-            .rstrip(')').split('"',1)[0].strip())
-        if url and url != '#':
-            return (display.Markdown(code), *macro(url))
-    if fnmatch(code, 'http*://*'):
-        if is_image: 
-            return display.Image(url=code),
-        return display.IFrame(code, width=600, height=400),
-    try:
-        if __import__('pathlib').Path(code).is_file(): 
-            return disp(filename=code),
-    except OSError: pass
+    lines = code.splitlines()
+    if lines[0].strip():
+        if len(lines) is 1:
+            from IPython import display
+            type = mimetypes.guess_type(code)[0]
+            is_image = type and type.startswith('image')
+            disp = (
+                partial(display.Image, embed=True) 
+                if is_image else display.Markdown)
+            if fnmatch(code, '*[[]*[]](*)'):
+                url = (
+                    code.lstrip('#').lstrip()
+                    .split(']', 1)[1].lstrip('(')
+                    .rstrip(')').split('"',1)[0].strip())
+                if url and url != '#':
+                    return (display.Markdown(code), *macro(url))
+            if fnmatch(code, 'http*://*'):
+                if is_image: 
+                    return display.Image(url=code),
+                return display.IFrame(code, width=600, height=400),
+            try:
+                if __import__('pathlib').Path(code).is_file(): 
+                    return disp(filename=code),
+            except OSError: pass
+        return display.Markdown(code), 
     return tuple()
 
 
@@ -111,14 +116,10 @@ class Transformer(UserList, InputTransformer):
         return type(self).__name__.replace('Transformer', '').lower()
 
     
-    def macro(self, body, *, ns=dict(), out=tuple()):
+    def macro(self, body, *, ns=dict()):
         if isinstance(body, self.env.template_class):
             body = body.render(**ns)
-        if len(self) is 1 and self[0].strip():
-            out = macro(body)
-        if not out:
-            out = display.Markdown(data=body),
-        return out
+        return macro(body)
     
     def reset(self, disp=True, *, ns=dict()):
         """This function must complete or IPython hangs."""
@@ -132,8 +133,7 @@ class Transformer(UserList, InputTransformer):
         ns = ns or self.shell.user_ns
         
         if self and disp:
-            output = self.macro(source, ns=ns)
-            output and display.display(*output)
+            display.display(*self.macro(source, ns=ns))
         
         self.data = []
 
