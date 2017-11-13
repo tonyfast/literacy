@@ -4,9 +4,9 @@
 # experimental: i am not even sure why you would use this.
 
 try:
-    from . import template
+    from . import template, literate
 except:
-    import template
+    import template, literate
 from traitlets import Any, observe
 from types import MethodType
 from contextlib import contextmanager
@@ -23,7 +23,16 @@ class Template(HTML):
     @observe('template')
     def _change_render(self, change=dict()):
         try:
-            self.value = markdown(self.template.render(**self.ns))
+            source = self.template.render(**self.ns)
+            outputs = literate.macro(source) or (display.Markdown(source),)
+            self.value = """"""
+            for output in outputs:
+                if hasattr(output, '_repr_html_'):
+                    self.value += output._repr_html_().strip() + '\n'
+                else:
+                    self.value += markdown(
+                        self.data, True
+                    ) + '\n'
         except Exception as e: ...
 
 
@@ -48,7 +57,6 @@ def run_cell(self, raw_cell, store_history=False, silent=False, shell_futures=Tr
 def load_ipython_extension(ip=get_ipython()):
     template.extension(Interact)(ip)
     ip.run_cell = MethodType(run_cell, get_ipython())
-    
 
 
 def unload_ipython_extension(ip=get_ipython()):
