@@ -29,7 +29,7 @@ def macro(code):
     from IPython import display
     lines = code.splitlines()
     if lines and lines[0].strip():
-        if len(lines) is 1:
+        if len(lines) is 1 and lines[0][0]:
             from IPython import display
             type = mimetypes.guess_type(code)[0]
             is_image = type and type.startswith('image')
