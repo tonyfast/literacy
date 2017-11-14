@@ -28,7 +28,7 @@ def identity(*args, **kwargs): return args[0]
 def macro(code):
     from IPython import display
     lines = code.splitlines()
-    if lines[0].strip():
+    if lines and lines[0].strip():
         if len(lines) is 1:
             from IPython import display
             type = mimetypes.guess_type(code)[0]
@@ -92,10 +92,9 @@ class Transformer(UserList, InputTransformer):
     """weave --> macro --> tangle"""
     push = UserList.append
     env = exporter.environment
-    template = False
+    template = True
     
     tangle = staticmethod(identity)
-    weave = staticmethod(identity)
     
     def register_transforms(self):
         self.shell.input_transformer_manager.logical_line_transforms = []
@@ -116,33 +115,27 @@ class Transformer(UserList, InputTransformer):
         return type(self).__name__.replace('Transformer', '').lower()
 
     
-    def macro(self, body, *, ns=dict()):
+    def weave(self, body, *, ns=dict(), disp=True):
         if isinstance(body, self.env.template_class):
             body = body.render(**ns)
-        return macro(body)
+        disp and  display.display(*macro(body))
+        return body
     
     def reset(self, disp=True, *, ns=dict()):
         """This function must complete or IPython hangs."""
-        source = '\n'.join(self)
-        if self.template:
-            try:
-                source = self.env.from_string(source)
-            except Exception as e:
-                warnings.warn("""Unable to weave the source.""")
-        
+        template = source = '\n'.join(self)
         ns = ns or self.shell.user_ns
-        
-        if self and disp:
-            display.display(*self.macro(source, ns=ns))
-        
+        if self and self.template:
+            try:
+                template = self.env.from_string(source) 
+                source = self.weave(template, ns=ns, disp=disp)
+            except Exception as e:
+                warnings.warn("""Unable to compile the source template.""")
         self.data = []
-
         try:
-            if isinstance(source, self.env.template_class):
-                source = source.render(**ns)
             source = self.tangle(source, ns=ns)
         except:
-            warnings.warn("""Unable to tangle the source.""")
+            warnings.warn("""Unable to extract the source.""")
         return source
     
     def run_code(self, line="""""", body=None):
