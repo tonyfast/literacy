@@ -1,8 +1,9 @@
 
 # coding: utf-8
 
+from typing import Tuple, Callable
 from types import ModuleType
-from importlib.machinery import SourceFileLoader
+from importlib.machinery import SourceFileLoader, ModuleSpec
 from pathlib import Path
 import sys, textwrap, warnings, mistune
 PY2 = sys.version_info.major is 2
@@ -14,10 +15,11 @@ from functools import partial, partialmethod
 from IPython import get_ipython, display
 from IPython.core.interactiveshell import InteractiveShell
 from nbconvert import filters
-from nbformat import reads, v4
+from nbformat import reads, v4, NotebookNode
 from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
-from nbconvert.exporters.templateexporter import TemplateExporter    
+from nbconvert.exporters.templateexporter import TemplateExporter
+
 exporter = TemplateExporter()
 HR = '---'
 
@@ -25,10 +27,17 @@ HR = '---'
 def identity(*args, **kwargs): return args[0]
 
 
-def macro(code):
+def macro(code: str)-> Tuple[display.DisplayObject]:
+    """
+    >>> url = "https://test.com"
+    >>> assert macro(url) and macro(''' {}
+    ...
+    ... '''.format(url))[0].data.strip() == url
+    """
+    
     from IPython import display
     lines = code.splitlines()
-    if lines and lines[0].strip():
+    if lines and lines[0] .strip():
         if len(lines) is 1 and lines[0][0]:
             from IPython import display
             type = mimetypes.guess_type(code)[0]
@@ -36,13 +45,10 @@ def macro(code):
             disp = (
                 partial(display.Image, embed=True) 
                 if is_image else display.Markdown)
-            if fnmatch(code, '*[[]*[]](*)'):
-                url = (
-                    code.lstrip('#').lstrip()
-                    .split(']', 1)[1].lstrip('(')
-                    .rstrip(')').split('"',1)[0].strip())
-                if url and url != '#':
-                    return (display.Markdown(code), *macro(url))
+            url = code.lstrip('#').lstrip().split(']', 1)
+            url = len(url) > 1 and url[1].lstrip('(').rstrip(')').split('"',1)[0].strip()
+            if url and url != '#':
+                return (display.Markdown(data=code), *macro(url))
             if fnmatch(code, 'http*://*'):
                 if is_image: 
                     return display.Image(url=code),
@@ -59,26 +65,26 @@ class Code(mistune.Renderer):
     """A mistune.Renderer to accumulate lines of code in a Markdown document."""
     code = """"""
     
-    def block_code(self, code, lang=""):
+    def block_code(self, code: str, lang: str="")->str:
         if not lang:
             self.code += code + '\n'
         if lang and lang.startswith('%%'):
             self.code = lang + '\n' + code
         return super(Code, self).block_code(code, lang)
 
-    def codespan(self, code):
+    def codespan(self, code: str) -> str:
         self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
         return super(Code, self).codespan(code)
     
     @staticmethod
-    def _indent(code):
+    def _indent(code:str)->int:
         """Determine the indent length of the last line."""
         return code and len(code[-1])-len(code[-1].lstrip()) or 0
 
 
 class Tangle(mistune.Markdown):
     """A mistune.Markdown processor for literate programming."""
-    def render(self, text, **kwargs):
+    def render(self, text: str, **kwargs)->str:
         self.renderer.code = """"""
         super(Tangle, self).render(text, **kwargs)
         return textwrap.dedent(self.renderer.code)
@@ -115,13 +121,15 @@ class Transformer(UserList, InputTransformer):
         return type(self).__name__.replace('Transformer', '').lower()
 
     
-    def weave(self, body, *, ns=dict(), disp=True):
+    # How do you type auxilary display objects?
+    def weave(self, body:str, *, ns:dict=dict(), disp:bool=True)->str:
         if isinstance(body, self.env.template_class):
             body = body.render(**ns)
-        disp and  display.display(*macro(body))
+        # display the thing
+        disp and display.display(*macro(body))
         return body
     
-    def reset(self, disp=True, *, ns=dict()):
+    def reset(self, disp:bool=True, *, ns:dict=dict())->str:
         """This function must complete or IPython hangs."""
         template = source = '\n'.join(self)
         ns = ns or self.shell.user_ns
@@ -138,10 +146,10 @@ class Transformer(UserList, InputTransformer):
             warnings.warn("""Unable to extract the source.""")
         return source
     
-    def run_code(self, line="""""", body=None):
+    def run_code(self, line:str="""""", body:str=None):
         self.shell.run_code(self.parse(True, line, body))
         
-    def parse(self, disp:bool, line="""""", body=None, *, ns=dict()):
+    def parse(self, disp:bool, line:str="""""", body:str=None, *, ns:dict=dict())->str:
         self.data = line and [line] or []
         self.data += (body or """""").splitlines()
         return self.reset(disp, ns=ns)
@@ -151,7 +159,8 @@ class Transformer(UserList, InputTransformer):
     __repr__ = InputTransformer.__repr__
 
 
-def literate_yaml(source, ns={}):
+def literate_yaml(source:str, ns={})->str:
+    """"""
     import yaml
     source = literate(source)
     if source.lstrip().startswith(HR):
@@ -163,8 +172,12 @@ def literate_yaml(source, ns={}):
     return filters.ipython2python(source)
 
 
-def load_markdown(source):
-    """Convert markdown to a notebook by separately cells with dividers."""
+def load_markdown(source:str)->NotebookNode:
+    """Convert markdown to a notebook by separately cells with dividers.
+    >>> nb = load_markdown('''print(10)\\n---\\nprint(20)''')
+    >>> assert len(nb.cells) is 2
+    >>> nb.cells # doctest: +SKIP
+    """
     nb = v4.new_notebook(cells=[v4.new_code_cell("""""")])
     for line in source.splitlines():
         if line.startswith(HR):
@@ -174,14 +187,29 @@ def load_markdown(source):
 
 
 class Markdown(Transformer):
+    """
+    >>> md = Markdown.instance()
+    >>> code = md('''# Test''')
+    >>> assert not code.strip()
+    >>> md('''    print(10)''')
+    'print(10)\\n'
+    """
     tangle = staticmethod(literate_yaml)
 
 
 class Importer(SourceFileLoader):
-    def create_module(self, spec):  
-        return ModuleType(self.name)
+    """
+    Import this module itself 
+    >>> i = Importer('literate', 'literate.ipynb')
+    >>> i.transformer = Markdown()
+    >>> module = i.exec_module(i.create_module(i.find_spec('literate')))
+    >>> assert hasattr(module, 'Importer')
+    """
+    def create_module(self, spec:str)->ModuleType:  return ModuleType(self.name)
     
-    def exec_module(self, module):
+    def exec_module(self, module:ModuleType)->ModuleType:
+        """Exceute each cell in the module attaching everything to the module.
+        """
         path = Path(self.path)
         source = path.read_text()
         nb = (
@@ -196,20 +224,27 @@ class Importer(SourceFileLoader):
                 raise ImportError(cell.source)
         return module
 
-    def find_spec(self, name, paths, target=None):
+    def find_spec(self, name:str, paths:list=None, target=None)->ModuleSpec:
         loader =  self.find_module(name, paths, target)
         return loader and spec_from_loader(name, loader)
+    
+def find_module(self, name:str, paths:list=None, target=None)->Importer:
+    for ext in ['.ipynb', '.md', '.markdown']:
+        for path in paths or [Path()]:
+            path = (path/Path(name.split('.')[-1])).with_suffix(ext)
+            if path.exists(): return Importer(name, str(path))
+    return None
 
-    def find_module(self, name, paths, target=None):
-        for ext in ['.ipynb', '.md', '.markdown']:
-            for path in paths or [Path()]:
-                path = (path/Path(name.split('.')[-1])).with_suffix(ext)
-                if path.exists(): return Importer(name, str(path))
-        return None
+Importer.find_module = find_module
 
 
-def extension(transformer):
-    def load_ipython_extension(ip=get_ipython()):
+def extension(transformer:Transformer)->Callable:
+    """
+    >>> import sys
+    >>> extension(Markdown)() # load the extension
+    >>> assert isinstance(sys.meta_path[-1], Importer)
+    """
+    def load_ipython_extension(ip:InteractiveShell=get_ipython()):
         nonlocal transformer
         transformer = transformer.instance()
         Importer.transformer = staticmethod(transformer)
@@ -219,7 +254,14 @@ def extension(transformer):
 
 load_ipython_extension = extension(Markdown)
     
-def unload_ipython_extension(ip=get_ipython()):
+def unload_ipython_extension(ip:InteractiveShell=get_ipython()):
+    """
+    >>> import sys
+    >>> extension(Markdown)() # load the extension
+    >>> unload_ipython_extension()
+    >>> assert not any(map(lambda x: isinstance(x, Importer), sys.meta_path))
+    """        
+    
     sys.meta_path = list(filter(
         lambda x: not isinstance(x, Importer), sys.meta_path))
     sys.path_importer_cache.clear()
@@ -227,5 +269,6 @@ def unload_ipython_extension(ip=get_ipython()):
 
 if __name__ == '__main__':
     load_ipython_extension()
+    print(__import__('doctest').testmod())
     get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
 
