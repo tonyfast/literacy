@@ -37,7 +37,7 @@ def macro(code: str)-> Tuple[display.DisplayObject]:
     
     from IPython import display
     lines = code.splitlines()
-    if lines and lines[0] .strip():
+    if lines and lines[0].strip():
         if len(lines) is 1 and lines[0][0]:
             from IPython import display
             type = mimetypes.guess_type(code)[0]
@@ -46,7 +46,7 @@ def macro(code: str)-> Tuple[display.DisplayObject]:
                 partial(display.Image, embed=True) 
                 if is_image else display.Markdown)
             url = code.lstrip('#').lstrip().split(']', 1)
-            url = len(url) > 1 and url[1].lstrip('(').rstrip(')').split('"',1)[0].strip()
+            url = len(url) is 2 and url[1].lstrip('(').rstrip(')').split('"',1)[0].strip()
             if url and url != '#':
                 return (display.Markdown(data=code), *macro(url))
             if fnmatch(code, 'http*://*'):

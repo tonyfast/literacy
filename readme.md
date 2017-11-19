@@ -20,7 +20,7 @@ pip install git+https://github.com/tonyfast/literacy
 
 ---
     
-`import literacy` accepts Markdown as source; the __inline__ and __indented__ code objects are concatenated into a single block of __python__ 
+`import literacy` accepts Markdown as source; the __inline__, __fenced__, __indented__ code objects are concatenated into a single block of __python__ 
 source code.  _All code in this block is executed._
 
     foo = 42
@@ -58,14 +58,16 @@ Use the templating system to explicitly write source, rather than implicit <code
 
 # Macros
 
-## yaml magic
+## yaml
 
-Being an indented code block with <code>---</code> to invoke yaml syntax as valid data input.  _This is great for taking notes._
+Begin a code block with <code>---</code> to invoke yaml syntax as valid data input.  _This is great for taking notes._
 
     ---
     refs:
     - roxygen.org/knuth-literate-programming.pdf
     - https://en.wikipedia.org/wiki/Literate_programming
+        
+> _The yaml source must contain named objects at the top level._
 
 
 
@@ -105,7 +107,36 @@ _`literacy;` makes it possible to import any notebook._
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2350 bytes to readme.md
+    [NbConvertApp] Writing 2346 bytes to readme.md
+
+
+
+# This is literate source
+
+
+
+# Inspect Source
+
+In the interactive mode `assert In` exists to store the prior code executed.
+
+It is possible to `def \`ine a function named `foo\` with a body composed below,
+
+Our function __foo__ has parameters __x__ and __y__
+
+    (x=42, y=10):
+        """Make sure to have a docstring"""
+with the ability to interpose markdown into the code, and
+        
+        return x*y
+
+
+    The source code for the previous cell is:
+    
+     assert In
+    def foo(x=42, y=10):
+        """Make sure to have a docstring"""
+    
+        return x*y
 
 
 
@@ -120,6 +151,11 @@ jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipy
 add the <code>--execute</code> flag to execute the notebook before it is converted.
 
 
-    [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2233 bytes to readme.md
+
+    %%markdown
+    # This is literate source
+
+
+
+# This is literate source
 
