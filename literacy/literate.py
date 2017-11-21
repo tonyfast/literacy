@@ -34,30 +34,19 @@ def macro(code: str)-> Tuple[display.DisplayObject]:
     ...
     ... '''.format(url))[0].data.strip() == url
     """
-    
-    from IPython import display
     lines = code.splitlines()
     if lines and lines[0].strip():
-        if len(lines) is 1 and lines[0][0]:
-            from IPython import display
+        if len(lines) is 1 and lines[0][:1].strip():
             type = mimetypes.guess_type(code)[0]
             is_image = type and type.startswith('image')
-            disp = (
-                partial(display.Image, embed=True) 
-                if is_image else display.Markdown)
-            url = code.lstrip('#').lstrip().split(']', 1)
-            url = len(url) is 2 and url[1].lstrip('(').rstrip(')').split('"',1)[0].strip()
-            if url and url != '#':
-                return (display.Markdown(data=code), *macro(url))
+            disp = partial(display.Image, embed=True) if is_image else display.Markdown
+            if fnmatch(code, "* [[]*[]](*)*"):
+                url = code.rsplit(')', 1)[0].rsplit('(',1)[1].split(' ', 1)[0]
+                if url and url != '#':
+                    return (display.Markdown(data=code), *macro(url))
             if fnmatch(code, 'http*://*'):
-                if is_image: 
-                    return display.Image(url=code),
-                return display.IFrame(code, width=600, height=400),
-            try:
-                if __import__('pathlib').Path(code).is_file(): 
-                    return disp(filename=code),
-            except OSError: pass
-        return display.Markdown(code), 
+                return is_image and display.Image(url=code) or display.IFrame(code, width=600, height=400),
+        return display.Markdown(data=code), 
     return tuple()
 
 
@@ -271,4 +260,7 @@ if __name__ == '__main__':
     load_ipython_extension()
     print(__import__('doctest').testmod())
     get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
+
+
+# [](https://en.wikipedia.org/wiki/Literate_programming)   
 
