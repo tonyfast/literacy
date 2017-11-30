@@ -19,6 +19,7 @@ from nbformat import reads, v4, NotebookNode
 from toolz.curried import identity as identity_, partial
 from mimetypes import MimeTypes; mimetypes = MimeTypes()
 from nbconvert.exporters.templateexporter import TemplateExporter
+import argparse
 
 exporter = TemplateExporter()
 HR = '---'
@@ -50,19 +51,30 @@ def macro(code: str)-> Tuple[display.DisplayObject]:
     return tuple()
 
 
+parser = argparse.ArgumentParser(prog='literate')
+parser.add_argument('-i', '--inline', action='store_true', help='Tangle inline code codespans.')
+parser.add_argument('-b', '--block', action='store_true', help='Tangle code blocks.')
+
 class Code(mistune.Renderer):
-    """A mistune.Renderer to accumulate lines of code in a Markdown document."""
+    """A mistune.Renderer to accumulate lines of code in a Markdown document.
+    
+    the parser configures inline and block modes.
+    """
     code = """"""
+    block = True
+    inline = True
     
     def block_code(self, code: str, lang: str="")->str:
-        if not lang:
-            self.code += code + '\n'
-        if lang and lang.startswith('%%'):
-            self.code = lang + '\n' + code
+        if self.block:
+            if not lang:
+                self.code += code + '\n'
+            if lang and lang.startswith('%%'):
+                self.code = lang + '\n' + code
         return super(Code, self).block_code(code, lang)
 
     def codespan(self, code: str) -> str:
-        self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
+        if self.inline:
+            self.code += textwrap.indent(code, ' '*self._indent(code)) + '\n'
         return super(Code, self).codespan(code)
     
     @staticmethod
@@ -97,7 +109,7 @@ class Transformer(UserList, InputTransformer):
         self.shell.input_transformer_manager.python_line_transforms = [self]
 
     def register_magic(self):
-        self.shell.register_magic_function(self.run_code, 'cell', self.name)
+        self.shell.register_magic_function(self.run_code, 'line_cell', self.name)
         
     @classmethod
     def instance(cls, *args, **kwargs):
@@ -139,6 +151,10 @@ class Transformer(UserList, InputTransformer):
         self.shell.run_code(self.parse(True, line, body))
         
     def parse(self, disp:bool, line:str="""""", body:str=None, *, ns:dict=dict())->str:
+        if line.startswith('-'):
+            for key, value in vars(parser.parse_args(line.split())).items(): 
+                setattr(Code, key, value)
+            line = None
         self.data = line and [line] or []
         self.data += (body or """""").splitlines()
         return self.reset(disp, ns=ns)
@@ -260,7 +276,4 @@ if __name__ == '__main__':
     load_ipython_extension()
     print(__import__('doctest').testmod())
     get_ipython().system('jupyter nbconvert --to python --TemplateExporter.exclude_input_prompt=True literate.ipynb')
-
-
-# [](https://en.wikipedia.org/wiki/Literate_programming)   
 
