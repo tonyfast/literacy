@@ -23,8 +23,8 @@ pip install git+https://github.com/tonyfast/literacy
 `import literacy` accepts Markdown as source; the __inline__, __fenced__, __indented__ code objects are concatenated into a single block of __python__ 
 source code.  _All code in this block is executed._
 
-    foo = 42
-    print(foo)
+    bar = 42
+    print(bar)
     assert literacy
     
 ---
@@ -71,10 +71,6 @@ Begin a code block with <code>---</code> to invoke yaml syntax as valid data inp
 
 
 
-    assert 'refs' in globals() 
-
-
-
 ---
     
     if __name__ == '__main__':
@@ -87,9 +83,9 @@ Begin a code block with <code>---</code> to invoke yaml syntax as valid data inp
 with the following tests 
 
         assert readme.__file__ == 'readme.ipynb'
-        assert readme.foo is foo
-        foo = 3.14
-        assert readme.foo is not foo
+        assert readme.foo() is bar
+        bar = 3.14
+        assert readme.foo() is not bar
         
 
 ---
@@ -107,7 +103,7 @@ _`literacy;` makes it possible to import any notebook._
 
 
     [NbConvertApp] Converting notebook readme.ipynb to markdown
-    [NbConvertApp] Writing 2346 bytes to readme.md
+    [NbConvertApp] Writing 2961 bytes to readme.md
 
 
 
@@ -115,47 +111,17 @@ _`literacy;` makes it possible to import any notebook._
 
 
 
-# Inspect Source
+    ---------------------------------------------------------------------------
 
-In the interactive mode `assert In` exists to store the prior code executed.
+    AssertionError                            Traceback (most recent call last)
 
-It is possible to `def \`ine a function named `foo\` with a body composed below,
-
-Our function __foo__ has parameters __x__ and __y__
-
-    (x=42, y=10):
-        """Make sure to have a docstring"""
-with the ability to interpose markdown into the code, and
-        
-        return x*y
+    <ipython-input-6-0e23f8f11675> in <module>()
+          6 
+          7     assert readme.__file__ == 'readme.ipynb'
+    ----> 8     assert readme.foo() is bar
+          9     bar = 3.14
+         10     assert readme.foo() is not bar
 
 
-    The source code for the previous cell is:
-    
-     assert In
-    def foo(x=42, y=10):
-        """Make sure to have a docstring"""
-    
-        return x*y
-
-
-
-# Nbconvert
-
-`literacy;` complies with the __nbconvert__ converters.  A successful use of literate programming will require the input cells to be suppressed
-
-```%%bash
-jupyter nbconvert --to markdown --TemplateExporter.exclude_input=True readme.ipynb
-```
-
-add the <code>--execute</code> flag to execute the notebook before it is converted.
-
-
-
-    %%markdown
-    # This is literate source
-
-
-
-# This is literate source
+    AssertionError: 
 
