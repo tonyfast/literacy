@@ -151,7 +151,7 @@ class Transformer(UserList, InputTransformer):
         self.shell.run_code(self.parse(True, line, body))
         
     def parse(self, disp:bool, line:str="""""", body:str=None, *, ns:dict=dict())->str:
-        if line.startswith('-'):
+        if line.startswith('-') and not HR in line:
             for key, value in vars(parser.parse_args(line.split())).items(): 
                 setattr(Code, key, value)
             line = None
